@@ -1,0 +1,15 @@
+#log-in {
+    width: 100vw;
+    min-height: 100vh;
+    background-image: url(../images/homepage-background.jpg);
+    background-size: cover;
+    background-position: top;
+}
+
+#log-in .bg-image {
+    background-image: url(../images/login.jpg);
+    background-position: center;
+    background-size: cover;
+    background-origin: border-box;
+
+}

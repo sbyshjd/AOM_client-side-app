@@ -1,0 +1,14 @@
+#homepage {
+    width: 100vw;
+    height: 100vh;
+    background-color: brown;
+    background-image: url(../images/homepage-background-6.jpg);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: cover;
+}
+
+div#homepage button .btn-user {
+    font-size: 10rem;
+    border-radius: 10rem;
+}

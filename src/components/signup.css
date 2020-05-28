@@ -1,0 +1,16 @@
+#sign-up {
+    width: 100vw;
+    min-height: 100vh;
+    /* background-image: url(../images/homepage-background-2.jpg);
+    background-size: cover;
+    background-position: bottom; */
+    background-color: lightgray;
+}
+
+#sign-up .bg-image {
+    background-image: url(../images/homepage-background-5.jpg);
+    background-position: center;
+    background-size: cover;
+    background-origin: border-box;
+
+}
