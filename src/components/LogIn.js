@@ -59,7 +59,7 @@ class LogIn extends Component {
                             </div>
                             
                             <div className='form-group mt-2'>
-                                <input type="text" placeholder='Password' 
+                                <input type="password" placeholder='Password' 
                                 className='form-control pt-4 pb-4 rounded-pill text-muted' 
                                 name='password' value={this.state.password} onChange={(e)=>this.changeHandler(e)}/>
                             </div>

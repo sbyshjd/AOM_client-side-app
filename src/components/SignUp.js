@@ -68,12 +68,12 @@ class SignUp extends Component {
                             </div>
                             <div className='row'>
                                 <div className='form-group col-6'>
-                                    <input type="text" placeholder='Password' 
+                                    <input type="password" placeholder='Password' 
                                     className='form-control pt-4 pb-4 rounded-pill text-muted' 
                                     name='password' value={this.state.password} onChange={(e)=>this.changeHandler(e)} />
                                 </div>
                                 <div className='form-group col-6'>
-                                    <input type="text" placeholder='Repeat password' 
+                                    <input type="password" placeholder='Repeat password' 
                                     className='form-control pt-4 pb-4 rounded-pill text-muted'
                                      name='passwordRepeat' value={this.state.passwordRepeat} onChange={(e)=>this.changeHandler(e)}/>
                                 </div>

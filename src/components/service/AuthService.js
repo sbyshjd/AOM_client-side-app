@@ -29,6 +29,11 @@ class AuthService {
         .then(response => response.data)
     }
 
+    update=(username,firstname,lastname,address,zipcode,city,country,phone,email,birthday,birthplace,nationality) => {
+        return this.service.put('/edit',{username,firstname,lastname,address,zipcode,city,country,phone,email,birthday,birthplace,nationality})
+        .then(response => response.data)
+    }
+
 }
 
 export default AuthService;

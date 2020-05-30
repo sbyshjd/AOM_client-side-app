@@ -45,36 +45,36 @@ class DashBoard extends Component {
                 
                 <li className='nav-item'>
                     <hr className='mt-0' style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
-                    <Link className='nav-link text-white'>Office</Link>
+                    <Link to='/' className='nav-link text-white'>Office</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 
                 
                 <li className="nav-item"> 
-                    <Link className='nav-link text-white'>My Page</Link>
+                    <Link to='/user' className='nav-link text-white'>My Page</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 
                 <li className="nav-item active"> 
-                    <Link className='nav-link text-white'>Projects</Link>
+                    <Link to='/' className='nav-link text-white'>Projects</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 <li className="nav-item active"> 
-                    <Link className='nav-link text-white'>Calendar</Link>
+                    <Link to='/' className='nav-link text-white'>Calendar</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 <li className="nav-item active"> 
-                    <Link className='nav-link text-white'>Blog</Link>
+                    <Link to='/' className='nav-link text-white'>Blog</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 <li className="nav-item active"> 
-                    <Link className='nav-link text-white'>Chat</Link>
+                    <Link to='/' className='nav-link text-white'>Chat</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 </ul>
                     
                 <div id='content'>
-                    <Link className='nav-link text-white' onClick={(e)=>this.logout(e)}>Log Out</Link>
+                    <Link to='/' className='nav-link text-white' onClick={(e)=>this.logout(e)}>Log Out</Link>
                 </div> 
                 </nav>
                 
