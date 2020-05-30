@@ -5,6 +5,8 @@ import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import AuthService from './components/service/AuthService';
 import DashBoard from './components/DashBoard';
+import DashTop from './components/DashTop';
+import DashOffice from './components/DashOffice';
 
 class App extends Component {
   constructor(props) {
@@ -43,9 +45,14 @@ class App extends Component {
     this.checkAuth();
     if(this.state.loggedUser) {
       return (
-        <Switch>
-        <Route exact path='/' render={props => <DashBoard {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
-      </Switch>
+         <div id='dashboard' className='d-flex'>
+            <Route path='/' render={props => <DashBoard {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <div style={{width:'100%'}}>
+            <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <Route path='/' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            </div>
+            
+        </div>
       )
     }
     return (
