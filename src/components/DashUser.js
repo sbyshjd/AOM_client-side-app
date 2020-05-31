@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import UserUpdate from './UserUpdate';
 import moment from 'moment';
+import AuthService from './service/AuthService';
+import loader from '../images/loader.gif';
 
 class DashUser extends Component {
     constructor(props) {
         super(props);
         this.state={
             loggedUser:this.props.user,
-            showUpdateForm:false
+            showUpdateForm:false,
+            isUploading:false,
         }
+        this.service = new AuthService();
     }
 
     setModalShow=(boolean) => {
@@ -20,6 +24,22 @@ class DashUser extends Component {
         return time
     }
 
+    uploadHandler = (e) => {
+        
+        this.setState({isUploading:true},this.uploadImage(e))
+        
+    }
+
+    uploadImage = (e) => {
+        const uploadFile = new FormData();
+        uploadFile.append('photo',e.target.files[0]);
+        this.service.upload(uploadFile)
+        .then(response => {
+            this.setState({isUploading:false})
+            this.props.getUser(null)
+        })
+        .catch(err => console.log(err))
+    }
 
     render() {
         return (
@@ -28,9 +48,18 @@ class DashUser extends Component {
                 <div className='row'>
                 <div className='col-6 col-md-3'>
                 <div className="card">
-                    <img src={this.state.loggedUser.photo} className="card-img-top" alt="profile"/>
+                {this.state.isUploading ? 
+                <img src={loader} alt="loader"/>
+                :<img src={this.state.loggedUser.photo} className="card-img-top" alt="profile"/>}
+                    
                     <div className="card-body">
-                        <p className="card-text">Nice profile picture here!</p>                        
+                        <h5 className="card-text">Your Profile Image</h5>
+                        <form>
+                            <div class="form-group mt-5">
+                            <label for="exampleFormControlFile1" className='p'>upload new one</label>
+                            <input type="file" class="form-control-file" onChange={(e)=>this.uploadHandler(e)}/>
+                            </div>
+                        </form>                        
                     </div>
                 </div>
                 </div>

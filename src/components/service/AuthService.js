@@ -34,6 +34,16 @@ class AuthService {
         .then(response => response.data)
     }
 
+    upload=(theFile) => {
+        return this.service.put('/upload',theFile)
+        .then(response => response.data)
+    }
+
+    getAllTheUsers=() => {
+        return this.service.get('/')
+        .then(response => response.data )
+    }
+
 }
 
 export default AuthService;
