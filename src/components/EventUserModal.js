@@ -33,7 +33,6 @@ class EventUserModal extends Component {
     }
 
     checkBoxHandler=(e) => {
-        console.log(e.target.checked)
         const participantsID = this.state.forwhoID;
         if(e.target.checked) {
             participantsID.push(e.target.value) 

@@ -68,10 +68,34 @@ class EventCard extends Component {
         })
     }
 
+    joinHandler=() => {
+        const participantID = this.props.user._id;
+        if(!this.state.isJoined) {
+            this.service.join(participantID,this.props._id)
+            .then(response => {
+                this.setState({
+                    isJoined:!this.state.isJoined
+                })
+                this.props.reload()
+            })
+            .catch(err => console.log(err))
+        } else {
+            this.service.unjoin(participantID,this.props._id)
+            .then(response => {
+                this.setState({
+                    isJoined: !this.state.isJoined
+                })
+                    this.props.reload()
+                })
+            .catch(err => console.log(err))
+        }
+
+    }
+
     render() {
         console.log(this.props.user._id)
         return (
-            <div className="card mt-3 mb-3 ml-5 mr-5">
+            <div className="card mt-3 mb-3">
                 <div className="card-header text-white" style={{backgroundColor:this.bgColor(this.props.type)}}>
                     {this.props.type}
                 </div>
@@ -81,41 +105,51 @@ class EventCard extends Component {
                     <p className='mb-0'>From: {moment(this.props.starttime).format("dddd, MMMM Do YYYY, h:mm:ss a")} </p>
                     <p>To: {moment(this.props.endtime).format("dddd, MMMM Do YYYY, h:mm:ss a")}</p>
                     <p>created by: {this.props.owner.firstname}</p>
-                    <button className="btn" style={{backgroundColor:this.bgColor(this.props.type)}}>Join</button>
-
-                    <button className='btn'>Participants:{this.props.participants.length}</button>
-                    <button className='btn'>Invited:{this.props.forwho.length}</button>
+                    <div className='d-flex justify-content-between'>
+                        <button className="btn" style={{backgroundColor:this.bgColor(this.props.type)}} onClick={this.joinHandler}>
+                            {this.state.isJoined ? 'unJoin':'Join'}
+                        </button>
+                        <div>
+                            <button className='btn'>Participants:{this.props.participants.length}</button>
+                            <button className='btn'>Invited:{this.props.forwho.length}</button>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div className="card-footer" style={{color:this.bgColor(this.props.type)}}>
-                {moment(this.props.starttime).fromNow()}
-                <button className='btn' onClick={()=>this.setModalShow(true)} >Edit</button>
-                <EventEditModal
-                    id={this.props._id}
-                    type={this.props.type}
-                    eventname = {this.props.eventname}
-                    description = {this.props.description}
-                    starttime = {this.props.starttime}
-                    endtime = {this.props.endtime}
-                    reload = {this.props.reload}
-                    show={this.state.showEventEditModal}
-                    onHide={()=>this.setModalShow(false)}
-                />
-                <button className='btn' onClick={()=>this.setUserModalShow(true)}>Assign Participants</button>
-                <EventUserModal
-                    id = {this.props._id}
-                    reload ={this.props.reload}
-                    forwho = {this.props.forwho}
-                    show={this.state.showEventUserModal}
-                    onHide={()=>this.setUserModalShow(false)}
-                />
-                <button className='btn' onClick={()=>this.setDeleteModalShow(true)}>Delete</button>
-                <EventDeleteModal
-                    id = {this.props._id}
-                    reload ={this.props.reload}
-                    delete = {this.deleteHandler}
-                    show={this.state.showEventDeleteModal}
-                    onHide={()=>this.setDeleteModalShow(false)}
-                />
+                <div className="card-footer d-flex justify-content-between" style={{color:this.bgColor(this.props.type)}}>
+                    <div>
+                        {moment(this.props.starttime).fromNow()}
+                    </div>
+                    <div>
+                        <button className='btn btn-outline-info' onClick={()=>this.setModalShow(true)} >Edit</button>
+                        <EventEditModal
+                            id={this.props._id}
+                            type={this.props.type}
+                            eventname = {this.props.eventname}
+                            description = {this.props.description}
+                            starttime = {this.props.starttime}
+                            endtime = {this.props.endtime}
+                            reload = {this.props.reload}
+                            show={this.state.showEventEditModal}
+                            onHide={()=>this.setModalShow(false)}
+                        />
+                        <button className='btn btn-outline-dark ml-3' onClick={()=>this.setUserModalShow(true)}>Assign Participants</button>
+                            <EventUserModal
+                                id = {this.props._id}
+                                reload ={this.props.reload}
+                                forwho = {this.props.forwho}
+                                show={this.state.showEventUserModal}
+                                onHide={()=>this.setUserModalShow(false)}
+                            />
+                        <button className='btn btn-outline-danger ml-3' onClick={()=>this.setDeleteModalShow(true)}>Delete</button>
+                            <EventDeleteModal
+                                id = {this.props._id}
+                                reload ={this.props.reload}
+                                delete = {this.deleteHandler}
+                                show={this.state.showEventDeleteModal}
+                                onHide={()=>this.setDeleteModalShow(false)}
+                            />
+                    </div>
                 </div>
             </div>
         );

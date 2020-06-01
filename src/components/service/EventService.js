@@ -25,12 +25,21 @@ class EventService {
     }
 
     edit = (type,eventname,description,starttime,endtime,id) => {
-        return this.service.put(`edit/${id}`,{type,eventname,description,starttime,endtime})
+        return this.service.put(`/edit/${id}`,{type,eventname,description,starttime,endtime})
         .then(response => response.data)
     }
 
     invite = (forwhoID,id) => {
-        return this.service.put(`invite/${id}`,{forwhoID})
+        return this.service.put(`/invite/${id}`,{forwhoID})
+        .then(response => response.data)
+    }
+
+    join = (participantID,id) => {
+        return this.service.put(`/join/${id}`,{participantID})
+        .then(response => response.data)
+    }
+    unjoin = (participantID,id) => {
+        return this.service.put(`/unjoin/${id}`,{participantID})
         .then(response => response.data)
     }
 }

@@ -31,9 +31,14 @@ class Events extends Component {
 
     render() {
         return (
-            <div className='overflow-auto'>
-                {this.state.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.reloadEvents} {...e}/>   )}
-                <button className="btn" onClick={()=>this.setModalShow(true)}>Add a new Event</button>
+            <div className='overflow-auto pl-5 pr-5'>
+                {this.state.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.reloadEvents} {...e}/>)}
+                <div className='d-flex flex-row-reverse'>
+                <button className="btn" onClick={()=>this.setModalShow(true)} style={{backgroundColor:'orange',color:'white'}}>
+                Add a new Event
+                </button>
+                </div>
+                
                     <EventCreateModal
                         reload = {this.reloadEvents}
                         owner = {this.props.user}
