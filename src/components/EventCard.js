@@ -4,6 +4,8 @@ import EventService from './service/EventService';
 import EventEditModal from './EventEditModal';
 import EventDeleteModal from './EventDeleteModal';
 import EventUserModal from './EventUserModal';
+import EventPaticipantsInfoModal from './EventPaticipantsInfoModal';
+import EventInvitationInfoModal from './EventInvitationInfoModal';
 
 class EventCard extends Component {
     constructor(props) {
@@ -12,6 +14,8 @@ class EventCard extends Component {
             showEventEditModal: false,
             showEventDeleteModal:false,
             showEventUserModal:false,
+            showEventPaticipantsInfoModal:false,
+            showEventInvitationInfoModal:false,
             participants:this.props.participants,
             isJoined:null
         }
@@ -40,6 +44,14 @@ class EventCard extends Component {
 
     setUserModalShow=(boolean) => {
         this.setState({showEventUserModal:boolean})
+    }
+
+    setPaticipantModalShow = (boolean) => {
+        this.setState({showEventPaticipantsInfoModal:boolean})
+    }
+
+    setInvitationInfoModalShow = (boolean) => {
+        this.setState({showEventInvitationInfoModal:boolean})
     }
 
     deleteHandler = () => {
@@ -93,7 +105,6 @@ class EventCard extends Component {
     }
 
     render() {
-        console.log(this.props.user._id)
         return (
             <div className="card mt-3 mb-3">
                 <div className="card-header text-white" style={{backgroundColor:this.bgColor(this.props.type)}}>
@@ -110,8 +121,18 @@ class EventCard extends Component {
                             {this.state.isJoined ? 'unJoin':'Join'}
                         </button>
                         <div>
-                            <button className='btn'>Participants:{this.props.participants.length}</button>
-                            <button className='btn'>Invited:{this.props.forwho.length}</button>
+                            <button className='btn' onClick={()=>this.setPaticipantModalShow(true)}>Participants:{this.props.participants.length}</button>
+                            <EventPaticipantsInfoModal
+                                participants = {this.props.participants}
+                                show={this.state.showEventPaticipantsInfoModal}
+                                onHide={()=>this.setPaticipantModalShow(false)}
+                            />
+                            <button className='btn'onClick={()=>this.setInvitationInfoModalShow(true)}>Invited:{this.props.forwho.length}</button>
+                            <EventInvitationInfoModal
+                                forwho = {this.props.forwho}
+                                show={this.state.showEventInvitationInfoModal}
+                                onHide={()=>this.setInvitationInfoModalShow(false)}
+                            />
                         </div>
                         
                     </div>
@@ -121,7 +142,7 @@ class EventCard extends Component {
                         {moment(this.props.starttime).fromNow()}
                     </div>
                     <div>
-                        <button className='btn btn-outline-info' onClick={()=>this.setModalShow(true)} >Edit</button>
+                        <button className='btn btn-outline-info' onClick={()=>this.setModalShow(true)}>Edit</button>
                         <EventEditModal
                             id={this.props._id}
                             type={this.props.type}

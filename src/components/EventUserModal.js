@@ -33,15 +33,20 @@ class EventUserModal extends Component {
     }
 
     checkBoxHandler=(e) => {
-        const participantsID = this.state.forwhoID;
-        if(e.target.checked) {
-            participantsID.push(e.target.value) 
-        } else {
-            let index = participantsID.findIndex(p=>p===e.target.value);
-            participantsID.splice(index,1)
+
+        const modal = document.getElementById('event-user-modal');
+        const inputArr = [...modal.childNodes].map(e=>e.childNodes[0]);
+        let checkAllInput = inputArr.shift();
+        const forwhoInput = inputArr.filter(input => input.checked);
+        if(forwhoInput.length < inputArr.length) {
+           checkAllInput.checked = false;
         }
-        this.setState({forwho:participantsID})
+        console.log(checkAllInput.checked);
+        const forwhoId = forwhoInput.map(input => input.value);
+        console.log(forwhoId);
+        this.setState({forwhoID:forwhoId});
     }
+
 
     submitHandler=() => {
         const forwhoID = this.state.forwhoID;
@@ -53,7 +58,23 @@ class EventUserModal extends Component {
         .catch(err=>console.log(err))
     }
 
+    closeHandler = () => {
+        this.props.onHide();
+    }
+
+    checkAllHandler = (e) => {
+        const modal = document.getElementById('event-user-modal')
+        const inputArr = [...modal.childNodes].map(e=>e.childNodes[0]);
+        if(e.target.checked) {
+            inputArr.forEach(e=>e.checked=true)
+        } else {
+            inputArr.forEach(e=>e.checked=false)
+        }
+        this.checkBoxHandler(e);
+    }
+
     render() {
+        
         return (
             <Modal
             {...this.props}
@@ -67,6 +88,12 @@ class EventUserModal extends Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            <div id='event-user-modal'>
+              <div className='form-check'>
+                  <input className="form-check-input" type="checkbox" id='check-all' 
+                     onChange={(e)=>this.checkAllHandler(e)} />
+                  <label className="form-check-label" htmlFor='check-all'>Ckeck All</label>
+              </div>
               {this.state.allTheUsers.map((p,i) => (<div className='form-check' key={p._id}>
                 <input className="form-check-input" type="checkbox"  
                 name={p.username} id={p._id} value={p._id} onChange={(e)=>this.checkBoxHandler(e)} defaultChecked={this.isChecked(i)}/>
@@ -75,10 +102,11 @@ class EventUserModal extends Component {
                 </label>
               </div>)
               )}
+            </div>
             </Modal.Body>
             <Modal.Footer>
-              <button type='submit' className='btn' onClick={this.submitHandler}>Add</button>
-              <button className='btn' onClick={this.props.onHide}>Close</button>
+              <button type='submit' className='btn' onClick={this.submitHandler}>Confirm</button>
+              <button className='btn' onClick={this.closeHandler}>Close</button>
             </Modal.Footer>
           </Modal>
         );

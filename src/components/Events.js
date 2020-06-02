@@ -31,7 +31,7 @@ class Events extends Component {
 
     render() {
         return (
-            <div className='overflow-auto pl-5 pr-5'>
+            <div className='overflow-auto pl-5 pr-5' style={{maxHeight:'600px'}}>
                 {this.state.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.reloadEvents} {...e}/>)}
                 <div className='d-flex flex-row-reverse'>
                 <button className="btn" onClick={()=>this.setModalShow(true)} style={{backgroundColor:'orange',color:'white'}}>
