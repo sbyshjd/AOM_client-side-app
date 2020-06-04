@@ -8,6 +8,7 @@ import DashBoard from './components/DashBoard';
 import DashTop from './components/DashTop';
 import DashOffice from './components/DashOffice';
 import DashUser from './components/DashUser';
+import DashCalendar from './components/DashCalendar';
 
 class App extends Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class App extends Component {
             <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <Route exact path='/' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <Route exact path='/user' render={props => <DashUser {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <Route exact path='/calendar' render={props => <DashCalendar {...props} getUser={this.getTheUser} user={this.state.loggedUser}/>}/>
             </div>
             
         </div>
