@@ -16,7 +16,7 @@ class DashOffice extends Component {
             <div>
                 <Tabs defaultActiveKey="events">
                     <Tab eventKey="events" title="Office Events">
-                    <Events user={this.state.loggedUser}/>
+                    <Events user={this.state.loggedUser} events={this.props.events} reload={()=>this.props.reload()}/>
                     </Tab>
                     <Tab eventKey="colleagues" title="Colleagues">
                     <Colleagues />

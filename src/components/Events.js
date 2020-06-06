@@ -8,7 +8,7 @@ class Events extends Component {
         super(props);
         this.state = {
             showCreateModal:false,
-            events:[]
+            // events:[]
         }
         this.service = new EventService();
     }
@@ -17,22 +17,22 @@ class Events extends Component {
         this.setState({showCreateModal:boolean})
     }
 
-    componentDidMount() {
-        this.reloadEvents();
-    }
+    // componentDidMount() {
+    //     this.reloadEvents();
+    // }
 
-    reloadEvents =() => {
-        this.service.get()
-        .then(response => {
-            this.setState({events:response})
-        })
-        .catch(err => console.log(err))
-    }
+    // reloadEvents =() => {
+    //     this.service.get()
+    //     .then(response => {
+    //         this.setState({events:response})
+    //     })
+    //     .catch(err => console.log(err))
+    // }
 
     render() {
         return (
             <div className='overflow-auto pl-5 pr-5' style={{maxHeight:'600px'}}>
-                {this.state.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.reloadEvents} {...e}/>)}
+                {this.props.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.props.reload} {...e}/>)}
                 <div className='d-flex flex-row-reverse'>
                 <button className="btn" onClick={()=>this.setModalShow(true)} style={{backgroundColor:'orange',color:'white'}}>
                 Add a new Event
@@ -40,7 +40,7 @@ class Events extends Component {
                 </div>
                 
                     <EventCreateModal
-                        reload = {this.reloadEvents}
+                        reload = {this.props.reload}
                         owner = {this.props.user}
                         show={this.state.showCreateModal}
                         onHide={()=>this.setModalShow(false)}

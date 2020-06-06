@@ -121,7 +121,7 @@ class EventCard extends Component {
                             {this.state.isJoined ? 'unJoin':'Join'}
                         </button>
                         <div>
-                            <button className='btn' onClick={()=>this.setPaticipantModalShow(true)}>Participants:{this.props.participants.length}</button>
+                            <button className='btn' onClick={()=>this.setPaticipantModalShow(true)}>Confirmed:{this.props.participants.length}</button>
                             <EventPaticipantsInfoModal
                                 participants = {this.props.participants}
                                 show={this.state.showEventPaticipantsInfoModal}
@@ -154,7 +154,7 @@ class EventCard extends Component {
                             show={this.state.showEventEditModal}
                             onHide={()=>this.setModalShow(false)}
                         />
-                        <button className='btn btn-outline-dark ml-3' onClick={()=>this.setUserModalShow(true)}>Assign Participants</button>
+                        <button className='btn btn-outline-dark ml-3' onClick={()=>this.setUserModalShow(true)}>Invitation</button>
                             <EventUserModal
                                 id = {this.props._id}
                                 reload ={this.props.reload}

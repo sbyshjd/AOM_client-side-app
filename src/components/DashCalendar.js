@@ -3,6 +3,8 @@ import Calendar from '@toast-ui/react-calendar';
 import 'tui-calendar/dist/tui-calendar.css';
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
+import EventService from './service/EventService';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const calendars=[
@@ -26,59 +28,57 @@ const calendars=[
 }
 ];
 
-const schedules = [
-  {
-    id: '1',
-    calendarId: '1',
-    title: 'TOAST UI Calendar Study',
-    category: 'time',
-    dueDateClass: '',
-    // start: today.toISOString(),
-    start:'2020-06-04T14:48:00.000Z',
-    // end: getDate('hours', today, 3, '+').toISOString()
-    end:'2020-06-04T15:48:00.000Z'
-  },
-  {
-    id: '2',
-    calendarId: '2',
-    title: 'Practice',
-    category: 'milestone',
-    dueDateClass: '',
-    // start: getDate('date', today, 1, '+').toISOString(),
-    // end: getDate('date', today, 1, '+').toISOString(),
-    start:'2020-06-05T14:48:00.000Z',
-    end:'2020-06-05T15:48:00.000Z',
+const scheduleFromEvents = (events) => {
+  const schedules = events.map(e => {
+    const schedule={};
+    schedule.id=e._id;
+    schedule.calendarId=changeTypeToId(e.type);
+    schedule.title=e.eventname;
+    schedule.start=e.starttime;
+    schedule.category= 'time';
+    schedule.attendees=e.forwho.map(p=>p.username)
+    schedule.end=e.endtime
+    return schedule;
+  })
+  return schedules;
+}
 
-    isReadOnly: true
-  },
-  {
-    id: '3',
-    calendarId: '3',
-    title: 'FE Workshop',
-    category: 'allday',
-    attendees:['1','2'],
-    dueDateClass: '',
-    // start: getDate('date', today, 2, '-').toISOString(),
-    // end: getDate('date', today, 1, '-').toISOString(),
-    start:'2020-06-03T14:48:00.000Z',
-    end:'2020-06-03T15:48:00.000Z',
-    isReadOnly: true
-  },
-  {
-    id: '4',
-    calendarId: '2',
-    title: 'Report',
-    category: 'time',
-    dueDateClass: '',
-    // start: today.toISOString(),
-    // end: getDate('hours', today, 1, '+').toISOString()
-    start:'2020-06-03T14:48:00.000Z',
-    end:'2020-06-03T15:48:00.000Z',
-
+const changeTypeToId = (type) => {
+  let id='';
+  switch(type) {
+    //'meeting','holiday','activity'
+    case 'meeting':
+      id='0';
+      break;
+    case 'holiday':
+      id='1';
+      break;
+    case 'activity':
+      id='2';
+      break;
+    default:
+      id='0';
   }
-];
+  return id
+}
 
-
+const changeIdToType = (id) => {
+  let type = '';
+  switch(id) {
+    case '0':
+      type='meeting';
+      break;
+    case '1':
+      type='holiday';
+      break;
+    case '2':
+      type='activity';
+    break;
+    default:
+      type='meeting';
+  }
+  return type;
+}
 
 
 
@@ -90,82 +90,147 @@ class DashCalendar extends Component {
   constructor(props) {
     super(props);
     this.state={
-      showPopUp:false
+
     }
-    this.project = '';
+    this.service = new EventService();
+    //create a instance of the calendaar to use method
+    this.cal=React.createRef();
+
   }
 
-  repalceLocationwithProject = (e) => {
-    if(!e.target.classList.contains('tui-full-calendar-time-date-schedule-block-wrap') && !e.target.classList.contains('tui-full-calendar-weekday-schedules')) {
-      return;
-    }
+  repalceLocationwithDescription = (e) => {
     const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
-    locationElement.style.display='none';
-    const sectionElement = locationElement.parentElement;
-    const optionArr = [1,2,3].map(n=>`<option class="tui-full-calendar-popup-section-item tui-full-calendar-dropdown-menu-item" data-calendar-id="0"><span class="tui-full-calendar-content">${n}</span></option>`).join('');
-    sectionElement.className = '';
-//     sectionElement.classList.add('tui-full-calendar-popup-section','tui-full-calendar-dropdown','tui-full-calendar-close', 'tui-full-calendar-section-calendar')
-//     sectionElement.innerHTML=`<button class="tui-full-calendar-button tui-full-calendar-dropdown-button tui-full-calendar-popup-section-item">
-//     <span class="tui-full-calendar-icon tui-full-calendar-calendar-dot" style="background-color: #5cb85c"></span>
-//     <span id="tui-full-calendar-schedule-calendar" class="tui-full-calendar-content">Project</span>
-//     <span class="tui-full-calendar-icon tui-full-calendar-dropdown-arrow"></span>
-// </button>
-// <ul id="tui-full-calendar-schedule-project" class="tui-full-calendar-dropdown-menu" style="z-index: 1004">
-//                     <li class="tui-full-calendar-popup-section-item tui-full-calendar-dropdown-menu-item" data-calendar-id="0">
-//                         <span class="tui-full-calendar-icon tui-full-calendar-calendar-dot" style="background-color: #5cb85c"></span>
-//                         <span class="tui-full-calendar-content">Meeting</span>
-//                     </li>
-//                     ${optionArr}
-//             </ul>
-//     </div>`
-    sectionElement.innerHTML=`<select id="tui-full-calendar-schedule-project"style="z-index: 1004">
-                         <option>
-                             <span class="tui-full-calendar-icon tui-full-calendar-calendar-dot" style="background-color: #5cb85c"></span>
-                             <span class="tui-full-calendar-content">Meeting</span>
+    console.log(locationElement);
+    const locationInput = locationElement.querySelector('#tui-full-calendar-schedule-location');
+    locationInput.placeholder='Description';
+    
+  }
+
+  addProjects=() => {
+    const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
+    locationElement.parentElement.insertAdjacentHTML('afterend','<select id="tui-full-calendar-schedule-project"style="z-index: 1004"></select>')
+    const projects = document.querySelector('#tui-full-calendar-schedule-project');
+    const optionArr = [1,2,3].map(n=>`<option>${n}</option>`).join('');
+    projects.innerHTML=`<option>
+                             Projects
                          </option>
-                         ${optionArr}
-                 </select>`
-    const projectInput = document.querySelector('#tui-full-calendar-schedule-project');
-    projectInput.addEventListener('click',(e)=> {
-      this.project=e.target;
-      console.log(e.target);
+                         ${optionArr}`
+  }
+
+  replaceStatewithOffice = (e) => {
+    const stateElement = document.querySelector('.tui-full-calendar-icon.tui-full-calendar-ic-state');
+    const sectionElement = stateElement.parentElement.parentElement;
+    const defaultState = document.querySelector('#tui-full-calendar-schedule-state');
+    defaultState.innerHTML='office';
+    const lists = sectionElement.querySelectorAll('li')
+    lists[0].children[1].innerHTML='office';
+    lists[1].children[1].innerHTML='unoffice';
+  }
+
+  addTheColleaguesButton = (e) => {
+    const stateElement = document.querySelector('.tui-full-calendar-icon.tui-full-calendar-ic-state');
+    const sectionElement = stateElement.parentElement.parentElement;
+    sectionElement.insertAdjacentHTML('afterend','<button id="pop-up-add-colleagues">add colleagues</button>');
+    const addColleaguesButton = document.querySelector('#pop-up-add-colleagues');
+    addColleaguesButton.addEventListener('click',()=> {
+      const colleaguesList = document.querySelector('#colleagues-list');
+      if(colleaguesList.style.visibility==='hidden') {
+        colleaguesList.style.visibility='visible';
+      } else {
+        colleaguesList.style.visibility='hidden';
+      }
+      
     })
   }
 
-  replaceStatewithColleagues = (e) => {
-    if(!e.target.classList.contains('tui-full-calendar-time-date-schedule-block-wrap') && !e.target.classList.contains('tui-full-calendar-weekday-schedules')) {
-      return;
-    }
-    const stateElement = document.querySelector('.tui-full-calendar-icon.tui-full-calendar-ic-state');
-    const sectionElement = stateElement.parentElement.parentElement;
-    sectionElement.className='';
-    sectionElement.innerHTML=`<button>add colleagues</button>`
-   console.log(stateElement);
+  colleaguesList = () => {
+    const addButton = document.querySelector('#pop-up-add-colleagues');
+    addButton.insertAdjacentHTML('afterend','<div style="postion: relative;"><select style="visibility: hidden; position: absolute" id="colleagues-list" multiple></select></div>');
+    const colleaguesArr = this.props.users.map(user=>`<option value="${user._id}">${user.username}</option>`).join('');
+    const colleaguesSeclection = document.querySelector('#colleagues-list');
+    colleaguesSeclection.innerHTML= colleaguesArr
   }
 
-  calendarRef = React.createRef();
+  hideTheAddColleagues = ()=> {
+    this.showPopUp = false;
+  }
+  
 
   clickScheduleHandler = (e) => {
     console.log(e);
   }
 
   createScheduleHandler = (e) => {
-    e.project='project';
     console.log(e);
+    console.log(e.start._date.toISOString())
+    //get the project info
+    const project = document.querySelector('#tui-full-calendar-schedule-project');
+    e.project=project.value;
+    //get the description
+    const descriptionInput = document.querySelector('#tui-full-calendar-schedule-location');
+    e.description=descriptionInput.value;
+    // get the forwho
+    const colleaguesInput = document.querySelectorAll('#colleagues-list option:checked');
+    const colleaguesArr = [...colleaguesInput].map(option => option.value)
+    console.log(colleaguesArr);
+
+
+    // const schedule= {
+    //   id: uuidv4(),
+    //   calendarId:e.calendarId,
+    //   title:e.title,
+    //   isAllDay:e.isAllDay,
+    //   start:e.start,
+    //   end:e.end,
+    //   category:e.isAllDay ? 'allday':'time',
+    //   dueDateClass:'',
+    //   raw:{
+    //     class:e.raw['class']
+    //   },
+    //   state:e.state
+    // };
+    
+    // const calIns = this.cal.current.getInstance();
+    // calIns.createSchedules([schedule]);
+    //create the event property for the mongodb model
+    const type = changeIdToType(e.calendarId);
+    const eventname = e.title;
+    const description = e.description;
+    const starttime = e.start._date.toISOString();
+    const endtime = e.end._date.toISOString();
+    const owner = this.props.user._id;
+    const forwho = colleaguesArr;
+    const participants = [];
+    //save the event into the backend database;
+    this.service.create(type,eventname,description,starttime,endtime,owner,forwho,participants)
+    .then(response => {
+      this.props.reload();
+    })
+    .catch(err => console.log(err))
+
+
     
   }
 
   doubleClickHandler=(e) => {
-    this.repalceLocationwithProject(e);
-    this.replaceStatewithColleagues(e);
+    console.log(e.target)
+    if(!e.target.classList.contains('tui-full-calendar-time-date-schedule-block-wrap') && !e.target.classList.contains('tui-full-calendar-weekday-schedules') && !e.target.classList.contains('tui-full-calendar-time-date')) {
+      return;
+    }
+    this.repalceLocationwithDescription(e);
+    this.replaceStatewithOffice(e);
+    this.addTheColleaguesButton(e);
+    this.colleaguesList();
+    this.addProjects();
     console.log(e.target)
   }
 
+//-------------------------- render method starts-----------------------------------------------
     render() {
         return (
             <div className='overflow-auto' style={{height:'650px'}} onDoubleClick={(e)=>this.doubleClickHandler(e)}>
                 <Calendar
-                ref={this.calendarRef}
+                ref={this.cal}
                 height="900px"
                 calendars={calendars}
                 disableDblClick={false}
@@ -174,7 +239,7 @@ class DashCalendar extends Component {
                 month={{
                   startDayOfWeek: 0
                 }}
-                schedules={schedules}
+                schedules={scheduleFromEvents(this.props.events)}
                 scheduleView
                 taskView={false}
                 template={{
@@ -208,6 +273,7 @@ class DashCalendar extends Component {
                 onBeforeCreateSchedule={this.createScheduleHandler}
                 onClickDayname
               />
+              
             </div>
             
         );
