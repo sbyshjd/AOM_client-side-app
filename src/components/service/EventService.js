@@ -9,8 +9,8 @@ class EventService {
         this.service = service;
     }
 
-    create=(type,eventname,description,starttime,endtime,owner,forwho,participants) => {
-        return this.service.post('/',{type,eventname,description,starttime,endtime,owner,forwho,participants})
+    create=(type,eventname,description,starttime,endtime,owner,mode,forwho,participants) => {
+        return this.service.post('/',{type,eventname,description,starttime,endtime,owner,mode,forwho,participants})
         .then(response => response.data)
     }
 
@@ -24,8 +24,8 @@ class EventService {
         .then(response => response.data)
     }
 
-    edit = (type,eventname,description,starttime,endtime,id) => {
-        return this.service.put(`/edit/${id}`,{type,eventname,description,starttime,endtime})
+    edit = (type,eventname,description,starttime,endtime,mode,id) => {
+        return this.service.put(`/edit/${id}`,{type,eventname,description,starttime,endtime,mode})
         .then(response => response.data)
     }
 

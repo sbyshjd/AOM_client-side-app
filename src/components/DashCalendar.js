@@ -4,7 +4,7 @@ import 'tui-calendar/dist/tui-calendar.css';
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import EventService from './service/EventService';
-import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 
 
 const calendars=[
@@ -23,8 +23,8 @@ const calendars=[
 {
     id:'2',
     name:'Activity',
-    bgColor:'#9e5fff',
-    borderColor:'#9e5fff'
+    bgColor:'#5bc0de',
+    borderColor:'#5bc0de'
 }
 ];
 
@@ -90,15 +90,17 @@ class DashCalendar extends Component {
   constructor(props) {
     super(props);
     this.state={
-
-    }
+      monday:'',
+      sunday:''
+    };
     this.service = new EventService();
+    this.showDeleteModal = false;
     //create a instance of the calendaar to use method
     this.cal=React.createRef();
 
   }
 
-  repalceLocationwithDescription = (e) => {
+  repalceLocationwithDescription = () => {
     const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
     console.log(locationElement);
     const locationInput = locationElement.querySelector('#tui-full-calendar-schedule-location');
@@ -117,21 +119,32 @@ class DashCalendar extends Component {
                          ${optionArr}`
   }
 
-  replaceStatewithOffice = (e) => {
-    const stateElement = document.querySelector('.tui-full-calendar-icon.tui-full-calendar-ic-state');
-    const sectionElement = stateElement.parentElement.parentElement;
-    const defaultState = document.querySelector('#tui-full-calendar-schedule-state');
-    defaultState.innerHTML='office';
-    const lists = sectionElement.querySelectorAll('li')
-    lists[0].children[1].innerHTML='office';
-    lists[1].children[1].innerHTML='unoffice';
+  hideCalendarState = () => {
+    const stateElement = document.querySelector('.tui-full-calendar-popup-section.tui-full-calendar-dropdown.tui-full-calendar-close.tui-full-calendar-section-state');
+    stateElement.style.display='none';
   }
 
-  addTheColleaguesButton = (e) => {
-    const stateElement = document.querySelector('.tui-full-calendar-icon.tui-full-calendar-ic-state');
-    const sectionElement = stateElement.parentElement.parentElement;
-    sectionElement.insertAdjacentHTML('afterend','<button id="pop-up-add-colleagues">add colleagues</button>');
+  replaceStatewithOffice = () => {
+    const stateElement = document.querySelector('.tui-full-calendar-popup-section.tui-full-calendar-dropdown.tui-full-calendar-close.tui-full-calendar-section-state');
+    stateElement.insertAdjacentHTML('afterend','<div id="tui-full-calendar-section-office"></div>')
+    const officeElement = document.querySelector('#tui-full-calendar-section-office')
+    officeElement.innerHTML = '<select id="calendar-state-select"></select>'
+    const officeSelect = document.querySelector('#calendar-state-select');
+    officeSelect.innerHTML = '<option value="group" selected>group</opyion value="self"><option>self</option>'
+    // const stateSelect = document.querySelector('#calendar-state-select');
+    // stateSelect.innerHTML='<option>group</option><option>self</option>'
+    // const defaultState = document.querySelector('#tui-full-calendar-schedule-state');
+    // defaultState.innerHTML='group';
+    // const lists = sectionElement.querySelectorAll('li')
+    // lists[0].children[1].innerHTML='group';
+    // lists[1].children[1].innerHTML='alone';
+  }
+
+  addTheColleaguesButton = () => {
+    const officeElement = document.querySelector('#tui-full-calendar-section-office')
+    officeElement.insertAdjacentHTML('afterend','<button id="pop-up-add-colleagues">add colleagues</button>');
     const addColleaguesButton = document.querySelector('#pop-up-add-colleagues');
+
     addColleaguesButton.addEventListener('click',()=> {
       const colleaguesList = document.querySelector('#colleagues-list');
       if(colleaguesList.style.visibility==='hidden') {
@@ -139,8 +152,18 @@ class DashCalendar extends Component {
       } else {
         colleaguesList.style.visibility='hidden';
       }
-      
     })
+
+    const stateSelect = document.querySelector('#calendar-state-select');
+    stateSelect.addEventListener("change", ()=> {
+      if(stateSelect.value==='self') {
+        addColleaguesButton.style.visibility='hidden';
+        return;
+      } else {
+        addColleaguesButton.style.visibility='visible';
+      }
+    })
+
   }
 
   colleaguesList = () => {
@@ -173,26 +196,10 @@ class DashCalendar extends Component {
     const colleaguesInput = document.querySelectorAll('#colleagues-list option:checked');
     const colleaguesArr = [...colleaguesInput].map(option => option.value)
     console.log(colleaguesArr);
+    //get the group-self option;
+    const stateSelect = document.querySelector('#calendar-state-select');
+    const mode = stateSelect.value;
 
-
-    // const schedule= {
-    //   id: uuidv4(),
-    //   calendarId:e.calendarId,
-    //   title:e.title,
-    //   isAllDay:e.isAllDay,
-    //   start:e.start,
-    //   end:e.end,
-    //   category:e.isAllDay ? 'allday':'time',
-    //   dueDateClass:'',
-    //   raw:{
-    //     class:e.raw['class']
-    //   },
-    //   state:e.state
-    // };
-    
-    // const calIns = this.cal.current.getInstance();
-    // calIns.createSchedules([schedule]);
-    //create the event property for the mongodb model
     const type = changeIdToType(e.calendarId);
     const eventname = e.title;
     const description = e.description;
@@ -202,33 +209,123 @@ class DashCalendar extends Component {
     const forwho = colleaguesArr;
     const participants = [];
     //save the event into the backend database;
-    this.service.create(type,eventname,description,starttime,endtime,owner,forwho,participants)
+    this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants)
     .then(response => {
       this.props.reload();
     })
     .catch(err => console.log(err))
+  }
 
-
-    
+  deleteScheduleHandler= (e) => {
+    // console.log(e);
+    const confirmBox = window.confirm('Do you want to delete this event?');
+    if(confirmBox) {
+    //delete the event from the backend database
+    this.service.delete(e.schedule.id)
+    .then(response => {
+      this.props.reload();
+    })
+    .catch(err => console.log(err))
+    } else {
+      console.log('cancel')
+    }
   }
 
   doubleClickHandler=(e) => {
-    console.log(e.target)
     if(!e.target.classList.contains('tui-full-calendar-time-date-schedule-block-wrap') && !e.target.classList.contains('tui-full-calendar-weekday-schedules') && !e.target.classList.contains('tui-full-calendar-time-date')) {
       return;
     }
-    this.repalceLocationwithDescription(e);
-    this.replaceStatewithOffice(e);
-    this.addTheColleaguesButton(e);
+    this.repalceLocationwithDescription();
+    this.replaceStatewithOffice();
+    this.hideCalendarState();
+    this.addTheColleaguesButton();
     this.colleaguesList();
     this.addProjects();
-    console.log(e.target)
+  }
+// the update button click to show the update pop up widnow
+  updateClickHandler=(e) => {
+    if(!e.target.classList.contains('tui-full-calendar-popup-edit') && !e.target.parentElement.classList.contains('tui-full-calendar-popup-edit')) {
+      return;
+    }
+
+    this.repalceLocationwithDescription();
+    this.replaceStatewithOffice();
+    this.hideCalendarState();
+    this.addTheColleaguesButton();
+    this.colleaguesList();
+    this.addProjects();
+  }
+
+// update the schedule;
+  updateScheduleHandler=(e) => {
+    console.log(e);
+    console.log(e.start._date.toISOString())
+    console.log(e.schedule.id);
+    //get the project info
+    const project = document.querySelector('#tui-full-calendar-schedule-project');
+    e.project=project.value;
+    //get the description
+    const descriptionInput = document.querySelector('#tui-full-calendar-schedule-location');
+    e.description=descriptionInput.value;
+    // get the forwho
+    const colleaguesInput = document.querySelectorAll('#colleagues-list option:checked');
+    const colleaguesArr = [...colleaguesInput].map(option => option.value)
+     //get the group-self option;
+     const stateSelect = document.querySelector('#calendar-state-select');
+     const mode = stateSelect.value;
+
+    const type = changeIdToType(e.changes.calendarId || e.schedule.calendarId);
+    const eventname = e.changes.title || e.schedule.title;
+    const description = e.description;
+    const starttime = e.changes.start ? e.changes.start._date.toISOString() : e.schedule.start._date.toISOString();
+    const endtime = e.changes.end ? e.changes.end._date.toISOString() : e.schedule.end._date.toISOString();
+    // const owner = this.props.user._id;
+    const forwho = colleaguesArr;
+    // const participants = [];
+    //send the update schedule to database
+    this.service.edit(type,eventname,description,starttime,endtime,mode,e.schedule.id)
+    .then(response => {
+      this.props.reload();
+      return this.service.invite(forwho,e.schedule.id)
+    })
+    .then(response => {
+      this.props.reload();
+    })
+    .catch(err => console.log(err))
+  }
+
+  nextButtonHandler=() => {
+    const calIns = this.cal.current.getInstance();
+    calIns.next();
+    this.setState({
+      monday:calIns.getDateRangeStart(),
+      sunday:calIns.getDateRangeEnd()
+    })
+  }
+
+  prevButtonHandler=() => {
+    const calIns = this.cal.current.getInstance();
+    calIns.prev();
+    this.setState({
+      monday:calIns.getDateRangeStart(),
+      sunday:calIns.getDateRangeEnd()
+    })
+  }
+  moveToToday=() => {
+    const calIns = this.cal.current.getInstance();
+    calIns.setDate(new Date())
   }
 
 //-------------------------- render method starts-----------------------------------------------
     render() {
+      // console.log(moment().isoWeekday(1).format('YYYY MMM DD'))
         return (
-            <div className='overflow-auto' style={{height:'650px'}} onDoubleClick={(e)=>this.doubleClickHandler(e)}>
+            <div className='overflow-auto' style={{height:'650px'}} onDoubleClick={(e)=>this.doubleClickHandler(e)} onClick={(e)=>this.updateClickHandler(e)}>
+              <div className='d-flex'>
+                <button onClick={this.moveToToday}>{'today'}</button> <button onClick={this.prevButtonHandler}>{'<'}</button> <button onClick={this.nextButtonHandler}>{'>'}</button> 
+                <p>{moment(this.state.monday._date).format('YYYY MMM DD') || moment().isoWeekday(1).format('YYYY MMM DD')}-{moment(this.state.sunday._date).format('YYYY MMM DD') || moment().isoWeekday(7).format('YYYY MMM DD')}</p>
+              </div>
+               
                 <Calendar
                 ref={this.cal}
                 height="900px"
@@ -271,9 +368,10 @@ class DashCalendar extends Component {
                 }}
                 onClickSchedule={this.clickScheduleHandler}
                 onBeforeCreateSchedule={this.createScheduleHandler}
+                onBeforeDeleteSchedule={this.deleteScheduleHandler}
+                onBeforeUpdateSchedule={this.updateScheduleHandler}
                 onClickDayname
               />
-              
             </div>
             
         );

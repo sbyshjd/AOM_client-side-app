@@ -33,10 +33,11 @@ class EventCreateModal extends Component {
         const starttime = this.state.starttime;
         const endtime = this.state.endtime;
         const owner = this.state.owner;
+        const mode = 'group';
         const forwho = this.state.forwho;
         const participants = this.state.participants;
 
-        this.service.create(type,eventname,description,starttime,endtime,owner,forwho,participants)
+        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants)
         .then(response => {
             this.props.reload();
             this.props.onHide();
