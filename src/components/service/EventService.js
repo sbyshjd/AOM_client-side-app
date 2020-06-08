@@ -9,8 +9,8 @@ class EventService {
         this.service = service;
     }
 
-    create=(type,eventname,description,starttime,endtime,owner,mode,forwho,participants) => {
-        return this.service.post('/',{type,eventname,description,starttime,endtime,owner,mode,forwho,participants})
+    create=(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday,project) => {
+        return this.service.post('/',{type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday,project})
         .then(response => response.data)
     }
 

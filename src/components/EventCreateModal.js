@@ -12,8 +12,10 @@ class EventCreateModal extends Component {
             starttime:'',
             endtime:'',
             owner:this.props.owner._id,
-            forwho:[],
-            participants:[]
+            forwho:[this.props.owner._id],
+            participants:[],
+            isallday:false
+
         }
         this.service = new EventService();
     }
@@ -23,6 +25,13 @@ class EventCreateModal extends Component {
         this.setState({
             [name]:value
         })
+    }
+
+    checkboxHandler=(e) => {
+      const{name,checked} = e.target;
+      this.setState({
+        [name]:checked
+      })
     }
 
     submitHandler=(e) => {
@@ -36,8 +45,9 @@ class EventCreateModal extends Component {
         const mode = 'group';
         const forwho = this.state.forwho;
         const participants = this.state.participants;
+        const isallday = this.state.isallday;
 
-        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants)
+        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday)
         .then(response => {
             this.props.reload();
             this.props.onHide();
@@ -92,6 +102,10 @@ class EventCreateModal extends Component {
                             <input className='form-control' type="datetime-local" name='endtime' 
                             value={this.state.address} onChange={(e)=>this.changeHandler(e)}/>
                         </div>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" name='isallday' onChange={(e)=>this.checkboxHandler(e)}/>
+                      <label class="form-check-label">isAllDay</label>
                     </div>
                     
               </form>
