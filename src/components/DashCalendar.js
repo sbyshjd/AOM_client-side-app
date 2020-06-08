@@ -5,6 +5,7 @@ import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import EventService from './service/EventService';
 import moment from 'moment';
+import CalendarColleagueList from './CalendarColleagueList';
 
 
 const calendars=[
@@ -34,6 +35,7 @@ const scheduleFromEvents = (events) => {
     schedule.id=e._id;
     schedule.calendarId=changeTypeToId(e.type);
     schedule.title=e.eventname;
+    schedule.location = e.description;
     schedule.start=e.starttime;
     schedule.category= 'time';
     schedule.attendees=e.forwho.map(p=>p.username)
@@ -131,20 +133,12 @@ class DashCalendar extends Component {
     officeElement.innerHTML = '<select id="calendar-state-select"></select>'
     const officeSelect = document.querySelector('#calendar-state-select');
     officeSelect.innerHTML = '<option value="group" selected>group</opyion value="self"><option>self</option>'
-    // const stateSelect = document.querySelector('#calendar-state-select');
-    // stateSelect.innerHTML='<option>group</option><option>self</option>'
-    // const defaultState = document.querySelector('#tui-full-calendar-schedule-state');
-    // defaultState.innerHTML='group';
-    // const lists = sectionElement.querySelectorAll('li')
-    // lists[0].children[1].innerHTML='group';
-    // lists[1].children[1].innerHTML='alone';
   }
 
   addTheColleaguesButton = () => {
     const officeElement = document.querySelector('#tui-full-calendar-section-office')
     officeElement.insertAdjacentHTML('afterend','<button id="pop-up-add-colleagues">add colleagues</button>');
     const addColleaguesButton = document.querySelector('#pop-up-add-colleagues');
-
     addColleaguesButton.addEventListener('click',()=> {
       const colleaguesList = document.querySelector('#colleagues-list');
       if(colleaguesList.style.visibility==='hidden') {
@@ -156,8 +150,10 @@ class DashCalendar extends Component {
 
     const stateSelect = document.querySelector('#calendar-state-select');
     stateSelect.addEventListener("change", ()=> {
+      const colleaguesList = document.querySelector('#colleagues-list');
       if(stateSelect.value==='self') {
         addColleaguesButton.style.visibility='hidden';
+        colleaguesList.style.visibility='hidden';
         return;
       } else {
         addColleaguesButton.style.visibility='visible';
@@ -178,8 +174,11 @@ class DashCalendar extends Component {
     this.showPopUp = false;
   }
   
-
+//change the detail pop up layout to show more detail information
   clickScheduleHandler = (e) => {
+    const detailPopUp = document.querySelector('.tui-full-calendar-popup.tui-full-calendar-popup-detail .tui-full-calendar-popup-container .tui-full-calendar-popup-section.tui-full-calendar-section-header div')
+    detailPopUp.insertAdjacentHTML('afterend',`<div>description</div>`)
+    console.log(detailPopUp);
     console.log(e);
   }
 
@@ -192,6 +191,7 @@ class DashCalendar extends Component {
     //get the description
     const descriptionInput = document.querySelector('#tui-full-calendar-schedule-location');
     e.description=descriptionInput.value;
+    e.location=descriptionInput.value;
     // get the forwho
     const colleaguesInput = document.querySelectorAll('#colleagues-list option:checked');
     const colleaguesArr = [...colleaguesInput].map(option => option.value)
@@ -206,7 +206,14 @@ class DashCalendar extends Component {
     const starttime = e.start._date.toISOString();
     const endtime = e.end._date.toISOString();
     const owner = this.props.user._id;
-    const forwho = colleaguesArr;
+    //assign the forwho
+    let forwho = [this.props.user._id];
+    if(mode==='group') {
+      if(!colleaguesArr.includes(this.props.user._id)) {
+        colleaguesArr.unshift(this.props.user._id)
+      }
+      forwho = colleaguesArr
+    }
     const participants = [];
     //save the event into the backend database;
     this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants)
@@ -320,13 +327,17 @@ class DashCalendar extends Component {
     render() {
       // console.log(moment().isoWeekday(1).format('YYYY MMM DD'))
         return (
-            <div className='overflow-auto' style={{height:'650px'}} onDoubleClick={(e)=>this.doubleClickHandler(e)} onClick={(e)=>this.updateClickHandler(e)}>
+            <div className='overflow-auto d-flex' style={{height:'650px'}} onDoubleClick={(e)=>this.doubleClickHandler(e)} onClick={(e)=>this.updateClickHandler(e)}>
+            <CalendarColleagueList
+              users={this.props.users}
+              rerenderCalendar = {this.props.renderedEvents}
+            />
+            <div style={{width:'100%'}}>  
               <div className='d-flex'>
                 <button onClick={this.moveToToday}>{'today'}</button> <button onClick={this.prevButtonHandler}>{'<'}</button> <button onClick={this.nextButtonHandler}>{'>'}</button> 
                 <p>{moment(this.state.monday._date).format('YYYY MMM DD') || moment().isoWeekday(1).format('YYYY MMM DD')}-{moment(this.state.sunday._date).format('YYYY MMM DD') || moment().isoWeekday(7).format('YYYY MMM DD')}</p>
               </div>
-               
-                <Calendar
+              <Calendar
                 ref={this.cal}
                 height="900px"
                 calendars={calendars}
@@ -372,6 +383,8 @@ class DashCalendar extends Component {
                 onBeforeUpdateSchedule={this.updateScheduleHandler}
                 onClickDayname
               />
+            </div>
+              
             </div>
             
         );

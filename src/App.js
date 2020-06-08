@@ -17,7 +17,9 @@ class App extends Component {
     this.state={
       loggedUser:null,
       events:[],
-      users:[]
+      calendarEvents:[],
+      users:[],
+      calendarUserIds:[]
     }
     this.service = new AuthService();
     this.eventService = new EventService();
@@ -28,23 +30,43 @@ class App extends Component {
     this.eventService.get()
     .then(response => {
       this.setState({
-        events:response
+        events:response,
+        calendarEvents:response
       })
     })
     //get all the users
     this.service.getAllTheUsers()
     .then(response => {
+      const userIds = response.map(u => u._id)
       this.setState({
-        users:response
+        users:response,
+        calendarUserIds:userIds
       })
     })
+  }
+//check if events need to render in the calendar
+  qualifyEvent =(event,ids)=> {
+    let isOwner = ids.includes(event.owner._id)
+    let eventParticipantsId = event.forwho.map(p => p._id);
+    let isParticipants = eventParticipantsId.some(id => ids.includes(id))
+    return isOwner || isParticipants;
+  }
+  //get the users for calendar render
+  calendarEventsByUserId = (ids) => {
+    const calendarEvents = this.state.events.filter(e => this.qualifyEvent(e,ids));
+    this.setState({
+      calendarUserIds:ids,
+      calendarEvents:calendarEvents
+    })
+
   }
 
   getAllTheEvents=() => {
     this.eventService.get()
     .then(response => {
       this.setState({
-        events:response
+        events:response,
+        calendarEvents:response.filter(e => this.qualifyEvent(e,this.state.calendarUserIds))
       })
     })
   }
@@ -83,7 +105,7 @@ class App extends Component {
             <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <Route exact path='/' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.events} reload={()=>this.getAllTheEvents()} /> }/>
             <Route exact path='/user' render={props => <DashUser {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
-            <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.events} getUser={this.getTheUser} user={this.state.loggedUser}/>}/>
+            <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.calendarEvents} renderedEvents={this.calendarEventsByUserId} getUser={this.getTheUser} user={this.state.loggedUser}/>}/>
             </div>
             
         </div>
