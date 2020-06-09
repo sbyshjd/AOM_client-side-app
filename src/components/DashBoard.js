@@ -45,7 +45,7 @@ class DashBoard extends Component {
                 
                 <li className='nav-item'>
                     <hr className='mt-0' style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
-                    <Link to='/' className='nav-link text-white'>Office</Link>
+                    <Link to='/office' className='nav-link text-white'>Office</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 
