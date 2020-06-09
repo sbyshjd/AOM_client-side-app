@@ -110,6 +110,9 @@ class DashCalendar extends Component {
 
   repalceLocationwithDescription = () => {
     const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
+    if(!locationElement) {
+      return;
+    }
     console.log(locationElement);
     const locationInput = locationElement.querySelector('#tui-full-calendar-schedule-location');
     locationInput.placeholder='Description';
@@ -189,6 +192,7 @@ class DashCalendar extends Component {
   }
 
   createScheduleHandler = (e) => {
+
     console.log(e);
     console.log(e.start._date.toISOString())
     //get the project info
@@ -261,14 +265,22 @@ class DashCalendar extends Component {
 
   dragHandler=(e) => {
 
-    // if(!e.target.classList.contains('tui-full-calendar-time-guide-creation') && !e.target.classList.contains('tui-full-calendar-time-guide-creation-label') && !e.target.classList.contains('tui-full-calendar-time-date') ) {
-    //   return;
-    // }
-    
+    if(!e.target.classList.contains('tui-full-calendar-time-guide-creation') && !e.target.classList.contains('tui-full-calendar-time-guide-creation-label')) {
+      return;
+    }
     const calIns = this.cal.current.getInstance();
-    calIns.openCreationPopup(null);
-    e.preventDefault();
-    console.log(e.target)
+    calIns.render();
+    //use set timeout to excute the callback
+    setTimeout(()=>{
+          this.repalceLocationwithDescription();
+    this.replaceStatewithOffice();
+    this.hideCalendarState();
+    this.addTheColleaguesButton();
+    this.colleaguesList();
+    this.addProjects();
+    },0)
+    // const floatingLayer = document.querySelector('.tui-full-calendar-floating-layer')
+    //     console.log(floatingLayer)
     // this.repalceLocationwithDescription();
     // this.replaceStatewithOffice();
     // this.hideCalendarState();
