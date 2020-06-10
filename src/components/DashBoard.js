@@ -56,7 +56,7 @@ class DashBoard extends Component {
                 </li>
                 
                 <li className="nav-item active"> 
-                    <Link to='/' className='nav-link text-white'>Projects</Link>
+                    <Link to='/projects' className='nav-link text-white'>Projects</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
                 <li className="nav-item active"> 

@@ -9,6 +9,9 @@ import DashTop from './components/DashTop';
 import DashOffice from './components/DashOffice';
 import DashUser from './components/DashUser';
 import DashCalendar from './components/DashCalendar';
+import DashProjects from './components/projects/DashProjects';
+
+
 import EventService from './components/service/EventService';
 
 class App extends Component {
@@ -105,6 +108,7 @@ class App extends Component {
             <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.events} reload={()=>this.getAllTheEvents()} /> }/>
             <Route exact path='/user' render={props => <DashUser {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} /> }/>
             <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.calendarEvents} renderedEvents={this.calendarEventsByUserId} getUser={this.getTheUser} user={this.state.loggedUser}/>}/>
             </div>
             
