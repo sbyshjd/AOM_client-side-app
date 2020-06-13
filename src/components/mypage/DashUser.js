@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import UserUpdate from './UserUpdate';
 import moment from 'moment';
-import AuthService from './service/AuthService';
-import loader from '../images/loader.gif';
+import AuthService from '../service/AuthService';
+import loader from '../../images/loader.gif';
 
 class DashUser extends Component {
     constructor(props) {

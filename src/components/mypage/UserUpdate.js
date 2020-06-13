@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Modal} from 'react-bootstrap';
-import AuthService from './service/AuthService';
+import AuthService from '../service/AuthService';
 import moment from 'moment';
 
 class UserUpdate extends Component {

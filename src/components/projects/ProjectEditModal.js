@@ -19,15 +19,16 @@ class ProjectEditModal extends Component {
         this.service = new ProjectService();
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log(nextProps.id);
-        if(!nextProps.id) {
+    componentDidUpdate(prevProps) {
+
+        console.log(prevProps.id);
+        if(prevProps.id===this.props.id) {
             return;
         }
         this.service.getOne(this.props.id)
         .then(project => {
             console.log(project);
-            const { projectname,projectcode,startdate,enddate,status,partner,leader,team,phase } = project[0];
+            const { projectname,projectcode,startdate,enddate,status,partner,leader,team,phase } = project;
             console.log(partner);
             this.setState({
                 projectname:projectname,
@@ -160,8 +161,10 @@ class ProjectEditModal extends Component {
                       <label>Project Leader:</label>
                       <select class="form-control" name='leader'
                        onChange={(e)=>this.changeHandler(e)}
+                       defaultValue={this.state.leader}
                       >
-                        {this.props.users.map(user => <option key={user._id} value={user._id}>{user.username}</option>)} 
+                        {this.props.users.map(user => <option key={user._id} value={user._id} selected={this.state.leader===user._id}>
+                        {user.username}</option>)} 
                       </select>
                     </div>
                     <div class="form-group">
@@ -169,7 +172,7 @@ class ProjectEditModal extends Component {
                       <div id='team-members-box' style={{position:'relative'}}>
                       <select id='team-members' style={{visibility:'hidden',position:'absolute'}} name='team' 
                       onChange={(e)=>this.teamMemberListHanlder(e)} multiple>
-                      {this.props.users.map(user => (<option key={user._id} value={user._id}>
+                      {this.props.users.map(user => (<option key={user._id} value={user._id} selected={this.state.team.includes(user._id)}> 
                             {user.username}
                             </option>)
                             )}

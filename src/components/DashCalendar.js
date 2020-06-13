@@ -45,7 +45,7 @@ const scheduleFromEvents = (events) => {
     schedule.end=e.endtime;
     schedule.isAllDay = e.isallday;
     schedule.state=e.mode;
-    schedule.raw=e.project;
+    schedule.location=e.project;
     return schedule;
   })
   return schedules;
@@ -123,9 +123,9 @@ class DashCalendar extends Component {
     const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
     locationElement.parentElement.insertAdjacentHTML('afterend','<select id="tui-full-calendar-schedule-project"style="z-index: 1004"></select>')
     const projects = document.querySelector('#tui-full-calendar-schedule-project');
-    const optionArr = [1,2,3].map(n=>`<option>${n}</option>`).join('');
-    projects.innerHTML=`<option>
-                             Projects
+    const optionArr = this.props.projects.map(p=>`<option value="${p.projectname}">${p.projectcode}${p.projectname}</option>`).join('');
+    projects.innerHTML=`<option value="non-project">
+                             non-Projects
                          </option>
                          ${optionArr}`
   }
@@ -324,10 +324,11 @@ class DashCalendar extends Component {
      const stateSelect = document.querySelector('#calendar-state-select');
      const mode = stateSelect ?  stateSelect.value : e.schedule.state;
 
-    const type = changeIdToType(e.changes.calendarId || e.schedule.calendarId);
-    const eventname = e.changes.title || e.schedule.title;
-    const starttime = e.changes.start ? e.changes.start._date.toISOString() : e.schedule.start._date.toISOString();
-    const endtime = e.changes.end ? e.changes.end._date.toISOString() : e.schedule.end._date.toISOString();
+
+    const type = changeIdToType(e.changes&&e.changes.calendarId ? e.changes.calendarId : e.schedule.calendarId);
+    const eventname = e.changes&&e.changes.title ? e.changes.title : e.schedule.title;
+    const starttime = e.changes&&e.changes.start ? e.changes.start._date.toISOString() : e.schedule.start._date.toISOString();
+    const endtime = e.changes&&e.changes.end ? e.changes.end._date.toISOString() : e.schedule.end._date.toISOString();
     //send the update schedule to database
     this.service.edit(type,eventname,description,starttime,endtime,mode,e.schedule.id)
     .then(response => {

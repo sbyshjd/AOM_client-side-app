@@ -11,7 +11,7 @@ class ProjectCreateModal extends Component {
             startdate:'',
             enddate:'',
             status:'ongoing',
-            leader:'',
+            leader:this.props.partner._id,
             team:[],
             phase:'Tender'
         }
@@ -135,7 +135,8 @@ class ProjectCreateModal extends Component {
                       <select class="form-control" name='leader'
                        onChange={(e)=>this.changeHandler(e)}
                       >
-                        {this.props.users.map(user => <option key={user._id} value={user._id}>{user.username}</option>)} 
+                        {this.props.users.map((user,i) => <option key={user._id} value={user._id}>
+                        {user.username}</option>)} 
                       </select>
                     </div>
                     <div class="form-group">

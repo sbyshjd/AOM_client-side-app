@@ -36,6 +36,8 @@ class Projects extends Component {
     }
 
     deleteClickHandler=(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         console.log(e.target.value);
         this.setState({
             deleteID:e.target.value,
@@ -44,6 +46,8 @@ class Projects extends Component {
     }
 
     editClickHandler=(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         console.log(e.target.value);
         this.setState({
             editID:e.target.value,
@@ -92,7 +96,7 @@ class Projects extends Component {
                         <td>{project.projectname}</td>
                         <td>{project.phase}</td>
                         <td>{project.leader.username}</td>
-                        <td>{project.team.map(p => <li>{p.username}</li>)}</td>
+                        <td>{project.team.map(p => <li key={p._id}>{p.username}</li>)}</td>
                         <td>{moment(project.startdate).format('YYYY-MMM-DD')}</td>
                         <td>{moment(project.enddate).format('YYYY-MMM-DD')}</td>
                         <td>{project.status}</td>
