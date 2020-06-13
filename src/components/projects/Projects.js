@@ -3,6 +3,7 @@ import ProjectCreateModal from './ProjectCreateModal';
 import ProjectService from '../service/ProjectService';
 import moment from 'moment';
 import ProjectDeleteModal from './ProjectDeleteModal';
+import ProjectEditModal from './ProjectEditModal';
 
 
 class Projects extends Component {
@@ -12,7 +13,9 @@ class Projects extends Component {
             showCreateModal: false,
             projects:[],
             showDeleteModal: false,
-            deleteID:''
+            deleteID:'',
+            showEditModal:false,
+            editID:''
         }
         this.service = new ProjectService();
 
@@ -40,9 +43,24 @@ class Projects extends Component {
         })
     }
 
+    editClickHandler=(e) => {
+        console.log(e.target.value);
+        this.setState({
+            editID:e.target.value,
+            showEditModal:true
+        })
+
+    }
+
     closeDeleteModal=() => {
         this.setState({
             showDeleteModal:false
+        })
+    }
+
+    closeEditModal=() => {
+        this.setState({
+            showEditModal:false
         })
     }
 
@@ -78,7 +96,7 @@ class Projects extends Component {
                         <td>{moment(project.startdate).format('YYYY-MMM-DD')}</td>
                         <td>{moment(project.enddate).format('YYYY-MMM-DD')}</td>
                         <td>{project.status}</td>
-                        <td><button>Edit</button></td>
+                        <td><button value={project._id} onClick={(e)=>this.editClickHandler(e)}>Edit</button></td>
                         <td><button value={project._id} onClick={(e)=>this.deleteClickHandler(e)}>Delete</button></td>
                     </tr>))}
                     
@@ -97,6 +115,14 @@ class Projects extends Component {
                     id={this.state.deleteID}
                     show={this.state.showDeleteModal}
                     onHide={()=>this.closeDeleteModal()}
+                />
+                <ProjectEditModal
+                    users = {this.props.users}
+                    reload = {this.getAllProjects}
+                    id={this.state.editID}
+                    partner = {this.props.user}
+                    show={this.state.showEditModal}
+                    onHide={()=>this.closeEditModal()}
                 />
             </div>
         );

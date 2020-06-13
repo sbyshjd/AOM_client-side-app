@@ -9,8 +9,8 @@ class ProjectService {
         this.service = service;
     }
 
-    create=(projectname,projectcode,startdate,enddate,status,owner,leader,team,phase) => {
-        return this.service.post('/',{projectname,projectcode,startdate,enddate,status,owner,leader,team,phase})
+    create=(projectname,projectcode,startdate,enddate,status,partner,leader,team,phase) => {
+        return this.service.post('/',{projectname,projectcode,startdate,enddate,status,partner,leader,team,phase})
         .then(response => response.data)
     }
 
@@ -21,6 +21,16 @@ class ProjectService {
 
     delete = (id) => {
         return this.service.delete(`/${id}`)
+        .then(response => response.data)
+    }
+
+    getOne = (id) => {
+        return this.service.get(`/${id}`)
+        .then(response => response.data)
+    }
+
+    edit=(projectname,projectcode,startdate,enddate,status,owner,leader,team,phase,id) => {
+        return this.service.put(`/${id}`,{projectname,projectcode,startdate,enddate,status,owner,leader,team,phase})
         .then(response => response.data)
     }
 }
