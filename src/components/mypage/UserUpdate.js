@@ -58,7 +58,6 @@ class UserUpdate extends Component {
     }
     
     render() {
-        console.log(this.timeFormat(this.state.birthday))
         return (
             <Modal
       {...this.props}

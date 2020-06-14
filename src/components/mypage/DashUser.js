@@ -55,9 +55,9 @@ class DashUser extends Component {
                     <div className="card-body">
                         <h5 className="card-text">Your Profile Image</h5>
                         <form>
-                            <div class="form-group mt-5">
-                            <label for="exampleFormControlFile1" className='p'>upload new one</label>
-                            <input type="file" class="form-control-file" onChange={(e)=>this.uploadHandler(e)}/>
+                            <div className="form-group mt-5">
+                            <label className='p'>upload new one</label>
+                            <input type="file" className="form-control-file" onChange={(e)=>this.uploadHandler(e)}/>
                             </div>
                         </form>                        
                     </div>
