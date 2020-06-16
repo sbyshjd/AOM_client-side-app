@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import TimeRegisterService from '../service/TimeRegisterService';
 
-const today = moment();
-const beginOfWeek = today.startOf('isoWeek').format('dddd, MMMM Do YYYY');
-const endOfWeek = today.endOf('isoWeek').format('dddd, MMMM Do YYYY');
 
 class DashTimeRegister extends Component {
 
@@ -13,14 +10,36 @@ class DashTimeRegister extends Component {
         this.state={
             timeRegisters:[],
             selectID:'',
+            weekNum: moment().week(),
+            yearNum: moment().year()
         }
         this.service = new TimeRegisterService();
     }
 
+
+    //change add or minus the week number by click
+    changeTheWeekNum =(e,num) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({
+            weekNum:this.state.weekNum + num
+        },this.getWeekTimeRegister)
+    }
+
+    //set the week number to current week
+    setTheCurrentWeek = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({
+            weekNum:moment().week(),
+            yearNum:moment().year()
+        },this.getWeekTimeRegister)
+    }
+
     getWeekTimeRegister = () => {
         const creator = this.props.user._id;
-        const year = moment().year();
-        const week = moment().week();
+        const year = this.state.yearNum;
+        const week = this.state.weekNum;
         this.service.getWeekAndUser(creator, year, week)
         .then(foundtimeRegisters => {
             this.setState({
@@ -36,9 +55,8 @@ class DashTimeRegister extends Component {
     }
 
     projectAddHandler=(e) => {
-        // const selectedProject = this.props.projects.find(p => p._id===this.state.selectID);
-        const year = moment().year();
-        const weekofyear = moment().week();
+        const year = this.state.yearNum;
+        const weekofyear = this.state.weekNum;
         const creator = this.props.user._id;
         const project = this.state.selectID;
         const monday = 0;
@@ -52,7 +70,6 @@ class DashTimeRegister extends Component {
         .then(response => {
             this.getWeekTimeRegister()
         })
-        //push the new project into the existing selected projects
     }
 
     timeRegisterDeleteHandler = (e) => {
@@ -112,7 +129,8 @@ class DashTimeRegister extends Component {
                         <button onClick={(e)=>this.projectAddHandler(e)}>+</button>
                     </div>
                     <div className='col-9'>
-                        <h5>Time Registration: {beginOfWeek} t/m {endOfWeek}--- week {moment().week()}</h5>
+                        <h5>Time Registration: {moment().isoWeek(this.state.weekNum).startOf('isoWeek').format('YYYY-MMM-DD')} t/m {moment().isoWeek(this.state.weekNum).endOf('isoWeek').format('YYYY-MMM-DD')}--- week {this.state.weekNum}</h5>
+                        <button onClick={(e) => this.changeTheWeekNum(e,-1)}>{'<'}</button><button onClick={(e)=>this.setTheCurrentWeek(e)}>today</button><button onClick={(e) => this.changeTheWeekNum(e,1)}>{'>'}</button>
                         <table className="table">
                             <thead>
                                 <tr>
@@ -141,8 +159,8 @@ class DashTimeRegister extends Component {
                                 </tr>)
                                 )}
                             </tbody>
-                            <button onClick={(e)=>this.saveWeekTime(e)}>Save</button>
                         </table>
+                        <button onClick={(e)=>this.saveWeekTime(e)}>Save</button>
                     </div>
                 </div>
             </div>
