@@ -75,10 +75,14 @@ class DashTimeRegister extends Component {
     timeRegisterDeleteHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.service.delete(e.target.value)
-        .then(response => {
-            this.getWeekTimeRegister();
-        })
+        const result = window.confirm("Are you sure to delete")
+        if(result) {
+            this.service.delete(e.target.value)
+            .then(response => {
+                this.getWeekTimeRegister();
+            })
+        }
+        
     }
 
     saveWeekTime = (e) => {
@@ -118,37 +122,42 @@ class DashTimeRegister extends Component {
 
     render() {
         return (
-            <div className='container'>
+            <div className='container-fluid'>
                 <div className='row'>
                     <div className='col-2'>
-                        <p>project selection</p>
-                        <select className='d-block' onChange={(e)=>this.projectChangeHandler(e)} >
+                        <h5 className='pt-3 pb-3'>Project Selection</h5>
+                        <select className='d-block form-control' onChange={(e)=>this.projectChangeHandler(e)} >
                             <option disabled selected hidden>selected project</option>
                             {this.props.projects.map(p => <option key={p._id} value={p._id}>{p.projectname}</option>)}
                         </select>
-                        <button onClick={(e)=>this.projectAddHandler(e)}>+</button>
+                        <button className='btn btn-warning float-right mt-3' onClick={(e)=>this.projectAddHandler(e)}>+</button>
                     </div>
                     <div className='col-9'>
-                        <h5>Time Registration: {moment().isoWeek(this.state.weekNum).startOf('isoWeek').format('YYYY-MMM-DD')} t/m {moment().isoWeek(this.state.weekNum).endOf('isoWeek').format('YYYY-MMM-DD')}--- week {this.state.weekNum}</h5>
-                        <button onClick={(e) => this.changeTheWeekNum(e,-1)}>{'<'}</button><button onClick={(e)=>this.setTheCurrentWeek(e)}>today</button><button onClick={(e) => this.changeTheWeekNum(e,1)}>{'>'}</button>
+                        <div className='d-flex justify-content-between pt-3 pb-3'>
+                            <h5>Time Registration: {moment().isoWeek(this.state.weekNum).startOf('isoWeek').format('YYYY-MMM-DD')} t/m {moment().isoWeek(this.state.weekNum).endOf('isoWeek').format('YYYY-MMM-DD')} --- week {this.state.weekNum}</h5>
+                            <div>
+                                <button className='btn' onClick={(e) => this.changeTheWeekNum(e,-1)}>{'<'}</button><button className='btn' onClick={(e)=>this.setTheCurrentWeek(e)}>today</button><button className='btn' onClick={(e) => this.changeTheWeekNum(e,1)}>{'>'}</button>
+                            </div>
+                        </div>
+                        
                         <table className="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Project</th>
                                     <th scope="col">Action</th>
-                                    <th scope="col">Monday</th>
-                                    <th scope="col">Tuesday</th>
-                                    <th scope="col">Wednesday</th>
-                                    <th scope="col">Thursday</th>
-                                    <th scope="col">Friday</th>
-                                    <th scope="col">Saturday</th>
-                                    <th scope="col">Sunday</th>
+                                    <th scope="col">Mon</th>
+                                    <th scope="col">Tue</th>
+                                    <th scope="col">Wed</th>
+                                    <th scope="col">Thu</th>
+                                    <th scope="col">Fri</th>
+                                    <th scope="col">Sat</th>
+                                    <th scope="col">Sun</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {this.state.timeRegisters.map(t => (<tr className='time-register-project' key={t._id} value={t._id}>
                                     <th scope="row" className='h6'>{t.project.projectname}</th>
-                                    <th><button value={t._id} onClick={(e)=>this.timeRegisterDeleteHandler(e)}>remove</button></th>
+                                    <th><button className='btn btn-danger' value={t._id} onClick={(e)=>this.timeRegisterDeleteHandler(e)}>remove</button></th>
                                     <td><input min='0' max='24' defaultValue={t.monday} style={{width:'50px'}} type="number"/></td>
                                     <td><input min='0' max='24' defaultValue={t.tuesday} style={{width:'50px'}} type="number"/></td>
                                     <td><input min='0' max='24' defaultValue={t.wednesday} style={{width:'50px'}} type="number"/></td>
@@ -160,7 +169,7 @@ class DashTimeRegister extends Component {
                                 )}
                             </tbody>
                         </table>
-                        <button onClick={(e)=>this.saveWeekTime(e)}>Save</button>
+                        <button className='btn btn-warning float-right' onClick={(e)=>this.saveWeekTime(e)}>Save</button>
                     </div>
                 </div>
             </div>

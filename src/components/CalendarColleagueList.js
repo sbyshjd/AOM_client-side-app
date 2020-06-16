@@ -40,8 +40,8 @@ class CalendarColleagueList extends Component {
 
     render() {
         return (
-            <div id='calendar-colleague-list' style={{width:'150px'}}>
-                <p>Colleagues</p>   
+            <div id='calendar-colleague-list' style={{width:'150px'}} className='border-right pl-3'>
+                <h5 className='mt-3 mb-3'>Colleagues</h5>   
                 <input class='calendar-colleague-list-checkall' type="checkbox" name='colleague-list' defaultChecked='checked' onChange={this.changeAllHandler}/>
                 <label>select all</label>
                 {this.props.users.map(user=>(<div key={user._id}>

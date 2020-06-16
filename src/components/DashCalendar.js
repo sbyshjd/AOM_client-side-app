@@ -121,7 +121,7 @@ class DashCalendar extends Component {
 
   addProjects=() => {
     const locationElement = document.querySelector('.tui-full-calendar-popup-section-item.tui-full-calendar-section-location');
-    locationElement.parentElement.insertAdjacentHTML('afterend','<select id="tui-full-calendar-schedule-project"style="z-index: 1004"></select>')
+    locationElement.parentElement.insertAdjacentHTML('afterend','<select class="form-control mb-2 " id="tui-full-calendar-schedule-project" style="z-index: 1004; font-size:0.75rem"></select>')
     const projects = document.querySelector('#tui-full-calendar-schedule-project');
     const optionArr = this.props.projects.map(p=>`<option value="${p.projectname}">${p.projectcode}${p.projectname}</option>`).join('');
     projects.innerHTML=`<option value="non-project">
@@ -139,14 +139,14 @@ class DashCalendar extends Component {
     const stateElement = document.querySelector('.tui-full-calendar-popup-section.tui-full-calendar-dropdown.tui-full-calendar-close.tui-full-calendar-section-state');
     stateElement.insertAdjacentHTML('afterend','<div id="tui-full-calendar-schedule-office"></div>')
     const officeElement = document.querySelector('#tui-full-calendar-schedule-office')
-    officeElement.innerHTML = '<select id="calendar-state-select"></select>'
+    officeElement.innerHTML = '<select class="form-control " id="calendar-state-select" style="width:100px; font-size:0.75rem"></select>'
     const officeSelect = document.querySelector('#calendar-state-select');
     officeSelect.innerHTML = '<option value="group" selected>group</opyion value="self"><option>self</option>'
   }
 
   addTheColleaguesButton = () => {
     const officeElement = document.querySelector('#tui-full-calendar-schedule-office')
-    officeElement.insertAdjacentHTML('afterend','<button id="pop-up-add-colleagues">add colleagues</button>');
+    officeElement.insertAdjacentHTML('afterend','<button class="btn btn-outline-primary btn-sm mt-2 pl-3 pr-3" style="border-radius:100rem" id="pop-up-add-colleagues">add colleagues</button>');
     const addColleaguesButton = document.querySelector('#pop-up-add-colleagues');
     addColleaguesButton.addEventListener('click',()=> {
       const colleaguesList = document.querySelector('#colleagues-list');
@@ -373,9 +373,13 @@ class DashCalendar extends Component {
               rerenderCalendar = {this.props.renderedEvents}
             />
             <div style={{width:'100%'}}>  
-              <div className='d-flex'>
-                <button onClick={this.moveToToday}>{'today'}</button> <button onClick={this.prevButtonHandler}>{'<'}</button> <button onClick={this.nextButtonHandler}>{'>'}</button> 
-                <p>{moment(this.state.monday._date).format('YYYY MMM DD') || moment().isoWeekday(1).format('YYYY MMM DD')}-{moment(this.state.sunday._date).format('YYYY MMM DD') || moment().isoWeekday(7).format('YYYY MMM DD')}</p>
+              <div className='d-flex justify-content-xl-around align-items-center'> 
+                <h5 className='mt-3 mb-3'>
+                  {moment(this.state.monday._date).format('YYYY MMM DD') || moment().isoWeekday(1).format('YYYY MMM DD')}-{moment(this.state.sunday._date).format('YYYY MMM DD') || moment().isoWeekday(7).format('YYYY MMM DD')}
+                </h5>
+                <div>
+                  <button className='btn' onClick={this.prevButtonHandler}>{'<'}</button> <button className='btn' onClick={this.moveToToday}>{'today'}</button> <button className='btn' onClick={this.nextButtonHandler}>{'>'}</button>
+                </div>
               </div>
               <Calendar
                 ref={this.cal}

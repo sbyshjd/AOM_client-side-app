@@ -100,13 +100,13 @@ class Projects extends Component {
                         <td>{moment(project.startdate).format('YYYY-MMM-DD')}</td>
                         <td>{moment(project.enddate).format('YYYY-MMM-DD')}</td>
                         <td>{project.status}</td>
-                        <td><button value={project._id} onClick={(e)=>this.editClickHandler(e)}>Edit</button></td>
-                        <td><button value={project._id} onClick={(e)=>this.deleteClickHandler(e)}>Delete</button></td>
+                        <td><button className='btn' value={project._id} onClick={(e)=>this.editClickHandler(e)}>Edit</button></td>
+                        <td><button className='btn' value={project._id} onClick={(e)=>this.deleteClickHandler(e)}>Delete</button></td>
                     </tr>))}
                     
                 </tbody>
             </table>
-                <button onClick={() => this.setModalShow(true)}>Create New Project</button>
+                <button className='btn btn-warning float-right mr-3' onClick={() => this.setModalShow(true)}>Create New Project</button>
                 <ProjectCreateModal
                     users = {this.props.users}
                     reload = {this.getAllProjects}
