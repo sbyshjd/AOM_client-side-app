@@ -4,6 +4,8 @@ import ProjectService from '../service/ProjectService';
 import moment from 'moment';
 import ProjectDeleteModal from './ProjectDeleteModal';
 import ProjectEditModal from './ProjectEditModal';
+import TaskPanelModal from './TaskPanelModal';
+import TaskService from '../service/TaskService';
 
 
 class Projects extends Component {
@@ -15,9 +17,13 @@ class Projects extends Component {
             showDeleteModal: false,
             deleteID:'',
             showEditModal:false,
-            editID:''
+            editID:'',
+            showTaskModal:false,
+            theTaskProject:{},
+            theTasks:[]
         }
         this.service = new ProjectService();
+        this.taskService = new TaskService();
 
     }
     setModalShow = (boolean) => {
@@ -35,6 +41,7 @@ class Projects extends Component {
         })
     }
 
+    //delete the project modal
     deleteClickHandler=(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -45,6 +52,7 @@ class Projects extends Component {
         })
     }
 
+    //edit the project modal
     editClickHandler=(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -56,6 +64,25 @@ class Projects extends Component {
 
     }
 
+    //open the task modal
+    openTaskModal=(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        //get the project by click
+        this.service.getOne(e.target.value)
+        .then(project => {
+        //get all the task of this project
+            this.taskService.get(project._id)
+            .then(tasks => {
+                this.setState({
+                    theTaskProject:project,
+                    theTasks:tasks,
+                    showTaskModal:true 
+                })
+            })  
+        })   
+    }
+
     closeDeleteModal=() => {
         this.setState({
             showDeleteModal:false
@@ -65,6 +92,12 @@ class Projects extends Component {
     closeEditModal=() => {
         this.setState({
             showEditModal:false
+        })
+    }
+
+    closeTaskModal=() => {
+        this.setState({
+            showTaskModal:false
         })
     }
 
@@ -82,10 +115,10 @@ class Projects extends Component {
                         <th scope="col">Project Name</th>
                         <th scope="col">Phase</th>
                         <th scope="col">Project Leader</th>
-                        <th scope="col">Project Team</th>
                         <th scope="col">Start Time</th>
                         <th scope="col">End Time</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Tasks</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
@@ -96,12 +129,12 @@ class Projects extends Component {
                         <td>{project.projectname}</td>
                         <td>{project.phase}</td>
                         <td>{project.leader.username}</td>
-                        <td>{project.team.map(p => <li key={p._id}>{p.username}</li>)}</td>
                         <td>{moment(project.startdate).format('YYYY-MMM-DD')}</td>
                         <td>{moment(project.enddate).format('YYYY-MMM-DD')}</td>
                         <td>{project.status}</td>
-                        <td><button className='btn' value={project._id} onClick={(e)=>this.editClickHandler(e)}>Edit</button></td>
-                        <td><button className='btn' value={project._id} onClick={(e)=>this.deleteClickHandler(e)}>Delete</button></td>
+                        <td><button className='btn btn-outline-info' value={project._id} onClick={(e)=>this.openTaskModal(e)}>Check Tasks</button></td>
+                        <td><button className='btn btn-outline-warning' value={project._id} onClick={(e)=>this.editClickHandler(e)}>Edit</button></td>
+                        <td><button className='btn btn-outline-danger' value={project._id} onClick={(e)=>this.deleteClickHandler(e)}>Delete</button></td>
                     </tr>))}
                     
                 </tbody>
@@ -127,6 +160,12 @@ class Projects extends Component {
                     partner = {this.props.user}
                     show={this.state.showEditModal}
                     onHide={()=>this.closeEditModal()}
+                />
+                <TaskPanelModal
+                    project={this.state.theTaskProject}
+                    tasks = {this.state.theTasks}
+                    show={this.state.showTaskModal}
+                    onHide={()=>this.closeTaskModal()}
                 />
             </div>
         );

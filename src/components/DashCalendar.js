@@ -39,10 +39,10 @@ const scheduleFromEvents = (events) => {
     schedule.calendarId=changeTypeToId(e.type);
     schedule.title=e.eventname;
     schedule.body = e.description;
-    schedule.start=e.starttime;
+    schedule.start=moment(e.starttime).format();
     schedule.category= 'time';
     schedule.attendees=e.forwho.map(p=>p.username);
-    schedule.end=e.endtime;
+    schedule.end=moment(e.endtime).format();
     schedule.isAllDay = e.isallday;
     schedule.state=e.mode;
     schedule.location=e.project;
@@ -215,7 +215,9 @@ class DashCalendar extends Component {
     const eventname = e.title;
     const description = e.body;
     const starttime = e.start._date.toISOString();
+    console.log(starttime);
     const endtime = e.end._date.toISOString();
+    console.log(endtime);
     const owner = this.props.user._id;
     const mode = e.state;
     //assign the forwho

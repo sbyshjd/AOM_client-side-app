@@ -78,7 +78,7 @@ class ProjectCreateModal extends Component {
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Create A new Event
+                Create A new Project
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

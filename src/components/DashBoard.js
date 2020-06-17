@@ -38,7 +38,7 @@ class DashBoard extends Component {
                 <ul className='navbar-nav'>
                 <li  className='nav-item d-flex align-items-center' style={{height:'70px'}}>
                     <Link to='/' className='nav-link m-auto'>
-                        <div className='d-none d-md-block text-white'>Archi-Office</div>  
+                        <div className='d-none d-md-block text-white'>HOME</div>  
                     </Link>
                     
                 </li>
