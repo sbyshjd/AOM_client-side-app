@@ -32,6 +32,18 @@ class TaskPanelModal extends Component {
 
         this.service.create(taskname,startdate,enddate,user,project)
         .then(response => {
+            this.props.reload();
+            this.props.onHide();
+        })
+    }
+
+    deleteHandler=(e) => {
+        e.preventDefault();
+        e.preventDefault();
+        console.log(e.target.value);
+        this.service.delete(e.target.value)
+        .then(response => {
+            this.props.reload();
             this.props.onHide();
         })
     }
@@ -66,7 +78,7 @@ class TaskPanelModal extends Component {
                         <td>{i+1}</td>
                         <td>{t.taskname}</td>
                         <td>{t.user.username}</td>
-                        <td><button className='btn btn-outline-light'>Delete</button></td> 
+                        <td><button value={t._id} className='btn btn-outline-light' onClick={(e)=>this.deleteHandler(e)}>Delete</button></td> 
                         </tr>))}
                     </tbody>
                 </table>

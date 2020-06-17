@@ -32,15 +32,6 @@ class Projects extends Component {
         })
     }
 
-    getAllProjects= () => {
-        this.service.get()
-        .then(response => {
-            this.setState({
-                projects: response
-            })
-        })
-    }
-
     //delete the project modal
     deleteClickHandler=(e) => {
         e.preventDefault();
@@ -101,9 +92,6 @@ class Projects extends Component {
         })
     }
 
-    componentDidMount() {
-        this.getAllProjects();
-    }
 
     render() {
         return (
@@ -124,7 +112,7 @@ class Projects extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                {this.state.projects.map(project => (<tr key={project._id}>
+                {this.props.projects.map(project => (<tr key={project._id}>
                         <th scope="row">{project.projectcode}</th>
                         <td>{project.projectname}</td>
                         <td>{project.phase}</td>
@@ -142,26 +130,27 @@ class Projects extends Component {
                 <button className='btn btn-warning float-right mr-3' onClick={() => this.setModalShow(true)}>Create New Project</button>
                 <ProjectCreateModal
                     users = {this.props.users}
-                    reload = {this.getAllProjects}
+                    reload = {this.props.getAllProjects}
                     partner = {this.props.user}
                     show={this.state.showCreateModal}
                     onHide={()=>this.setModalShow(false)}
                 />
                 <ProjectDeleteModal
-                    reload = {this.getAllProjects}
+                    reload = {this.props.getAllProjects}
                     id={this.state.deleteID}
                     show={this.state.showDeleteModal}
                     onHide={()=>this.closeDeleteModal()}
                 />
                 <ProjectEditModal
                     users = {this.props.users}
-                    reload = {this.getAllProjects}
+                    reload = {this.props.getAllProjects}
                     id={this.state.editID}
                     partner = {this.props.user}
                     show={this.state.showEditModal}
                     onHide={()=>this.closeEditModal()}
                 />
                 <TaskPanelModal
+                    reload={this.props.getAllTasks}
                     project={this.state.theTaskProject}
                     tasks = {this.state.theTasks}
                     show={this.state.showTaskModal}

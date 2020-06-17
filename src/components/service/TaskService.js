@@ -19,10 +19,15 @@ class TaskService {
         .then(response => response.data)
     }
 
-    // delete = (id) => {
-    //     return this.service.delete(`/${id}`)
-    //     .then(response => response.data)
-    // }
+    getAll=() => {
+        return this.service.get('/')
+        .then(response => response.data)
+    }
+
+    delete = (id) => {
+        return this.service.delete(`/${id}`)
+        .then(response => response.data)
+    }
 
 }
 

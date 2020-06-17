@@ -20,8 +20,6 @@ class ProjectEditModal extends Component {
     }
 
     componentDidUpdate(prevProps) {
-
-        console.log(prevProps.id);
         if(prevProps.id===this.props.id) {
             return;
         }
