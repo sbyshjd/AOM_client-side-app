@@ -10,10 +10,12 @@ import DashOffice from './components/DashOffice';
 import DashMyPage from './components/mypage/DashMyPage';
 import DashCalendar from './components/DashCalendar';
 import DashProjects from './components/projects/DashProjects';
+import DashHome from './components/DashHome';
 
 
 import EventService from './components/service/EventService';
 import ProjectService from './components/service/ProjectService';
+import TaskService from './components/service/TaskService';
 
 class App extends Component {
   constructor(props) {
@@ -24,11 +26,13 @@ class App extends Component {
       projects:[],
       calendarEvents:[],
       users:[],
-      calendarUserIds:[]
+      calendarUserIds:[],
+      tasks:[]
     }
     this.service = new AuthService();
     this.eventService = new EventService();
     this.projectService = new ProjectService();
+    this.taskService = new TaskService();
   }
 
   componentDidMount() {
@@ -57,6 +61,15 @@ class App extends Component {
             projects: response
         })
     })
+
+    //get all the tasks
+    this.taskService.getAll()
+    .then(response => {
+      this.setState({
+        tasks: response
+      })
+    })
+
 
   }
 //check if events need to render in the calendar
@@ -122,6 +135,7 @@ class App extends Component {
             <Route path='/' render={props => <DashBoard {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <div style={{width:'100%'}}>
             <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <Route exact path='/' render={props => <DashHome {...props} user={this.state.loggedUser} users={this.state.users} projects={this.state.projects} tasks={this.state.tasks} /> }/>
             <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.events} reload={()=>this.getAllTheEvents()} /> }/>
             <Route exact path='/user' render={props => <DashMyPage {...props} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects} /> }/>
             <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} /> }/>

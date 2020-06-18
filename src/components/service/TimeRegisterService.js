@@ -19,10 +19,10 @@ class TimeRegisterService {
         .then(response => response.data)
     }
 
-    // get = () => {
-    //     return this.service.get('/')
-    //     .then(response => response.data)
-    // }
+    getAllAndUser = (creator) => {
+        return this.service.get(`/${creator}`)
+        .then(response => response.data)
+    }
 
     delete = (id) => {
         return this.service.delete(`/${id}`)
