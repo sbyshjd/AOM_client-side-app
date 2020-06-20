@@ -44,6 +44,18 @@ class AuthService {
         .then(response => response.data )
     }
 
+    googleLogIn = (response) => {
+        const { accessToken } = response;
+        if(!accessToken) {
+            return null;
+        }
+        const googleResponse = {
+            access_token: accessToken
+        }
+        return this.service.post('/login/google',googleResponse)
+        .then(response => response.data)
+    }
+
 }
 
 export default AuthService;

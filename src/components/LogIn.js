@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './login.css';
+import GoogleLogin from 'react-google-login';
+import { FcGoogle } from 'react-icons/fc';
 import { Link, Redirect } from 'react-router-dom';
 import AuthService from './service/AuthService';
 
@@ -26,6 +28,18 @@ class LogIn extends Component {
         let username = this.state.username;
         let password = this.state.password;
         this.service.login(username,password)
+        .then(response => {
+            this.setState({
+                username:'',
+                password:'',
+                isSubmit:true
+            })
+            this.props.getUser(response)
+        })
+    }
+
+    handleGoogleLogin = (response) => {
+        this.service.googleLogIn(response)
         .then(response => {
             this.setState({
                 username:'',
@@ -68,7 +82,25 @@ class LogIn extends Component {
                             <button type='submit' className='btn btn-block btn-primary pt-2 pb-2 rounded-pill'>Log in</button>
                         </form>
                         <hr/>
-                        <Link to='/' type='submit' className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'>Register with Google</Link>
+                        <GoogleLogin
+                            clientId='403475566780-89vdhumrng12v39d51f7mi1rnsr10vo5.apps.googleusercontent.com'
+                            render={(renderProps) => (
+                                <button
+                                type='button'
+                                className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'
+                                onClick={renderProps.onClick}
+                                disabled={renderProps.disabled}
+                                >
+                                <FcGoogle />
+                                Sign in with Google
+                                </button>
+                            )}
+                            buttonText='Login'
+                            onSuccess={this.handleGoogleLogin}
+                            onFailure={this.handleGoogleLogin}
+                            cookiePolicy={'single_host_origin'}
+                        />
+                        {/* <Link to='/' type='submit' className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'>Register with Google</Link> */}
                         <Link to='/' type='submit' className='btn btn-block btn-info pt-2 pb-2 rounded-pill'>Register with Facebook</Link>
                         <hr/>
                         <Link to='/login' className='d-block text-center text-primary mt-3' style={{fontSize:'0.8rem'}}>Forgot your password?</Link>

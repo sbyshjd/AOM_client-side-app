@@ -63,10 +63,6 @@ class DashBoard extends Component {
                     <Link to='/calendar' className='nav-link text-white'>Calendar</Link>
                     <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
                 </li>
-                <li className="nav-item active"> 
-                    <Link to='/' className='nav-link text-white'>Chat</Link>
-                    <hr style={{borderTop :'1px solid rgba(255,255,255,0.5)'}}/>
-                </li>
                 </ul>
                     
                 <div id='content'>
