@@ -3,7 +3,7 @@ import axios from 'axios';
 class ForgotPasswordService {
     constructor() {
         let service = axios.create({
-            baseURL:'http://localhost:5000/api/forgotPassword',
+            baseURL:`${process.env.REACT_APP_API_URL}/api/forgotPassword`,
             withCredentials:true
         })
         this.service = service;

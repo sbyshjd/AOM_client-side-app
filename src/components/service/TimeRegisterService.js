@@ -3,7 +3,7 @@ import axios from 'axios';
 class TimeRegisterService {
     constructor() {
         let service = axios.create({
-            baseURL:'http://localhost:5000/api/worktimes',
+            baseURL:`${process.env.REACT_APP_API_URL}/api/worktimes`,
             withCredentials:true
         })
         this.service = service;
