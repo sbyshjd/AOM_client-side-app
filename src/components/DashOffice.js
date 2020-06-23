@@ -14,7 +14,7 @@ class DashOffice extends Component {
 
     eventsFilterHandler = (events) => {
        return  events.filter(e => {
-            return e.mode==='group'&& (e.forwho.findIndex(user => user._id===this.props.user._id) >=0 || e.owner._id===this.props.user._id )
+            return e.mode==='group'&& (e.forwho.findIndex(user => user._id===this.props.user._id) >=0 || e.owner._id===this.props.user._id || e.isforall===true )
        })
     }
     render() {

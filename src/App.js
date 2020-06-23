@@ -16,6 +16,8 @@ import DashHome from './components/DashHome';
 import EventService from './components/service/EventService';
 import ProjectService from './components/service/ProjectService';
 import TaskService from './components/service/TaskService';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 class App extends Component {
   constructor(props) {
@@ -70,8 +72,54 @@ class App extends Component {
       })
     })
 
-
   }
+//----------------------------after component did mounted-------------------------------------------
+  //get all the events from database
+  getAllEvents=() => {
+    this.eventService.get()
+    .then(response => {
+      this.setState({
+        events:response,
+        calendarEvents:response
+      })
+    })
+  }
+
+//get all the projects from db
+  getAllProjects=() => {
+    this.projectService.get()
+    .then(response => {
+        this.setState({
+            projects: response
+        })
+    })
+  }
+
+//get all tasks from db
+  getAllTasks=() => {
+    this.taskService.getAll()
+    .then(response => {
+      this.setState({
+        tasks: response
+      })
+    })
+  }
+
+  //get all users from db
+  getAllUsers=() => {
+    this.service.getAllTheUsers()
+    .then(response => {
+      const userIds = response.map(u => u._id)
+      this.setState({
+        users:response,
+        calendarUserIds:userIds
+      })
+    })
+  }
+  
+
+
+
 //check if events need to render in the calendar
   qualifyEvent =(event,ids)=> {
     let isOwner = ids.includes(event.owner._id)
@@ -106,6 +154,11 @@ class App extends Component {
   getTheUser=(user)=> {
     this.setState({
       loggedUser:user
+    },()=> {
+      this.getAllEvents();
+      this.getAllProjects();
+      this.getAllTasks();
+      this.getAllUsers();
     })
   }
 
@@ -151,6 +204,8 @@ class App extends Component {
         <Route exact path='/' render={props => <Home {...props}/> }/>
         <Route exact path='/signup' render={props => <SignUp {...props} getUser={this.getTheUser}/> }/>
         <Route exact path='/login' render={props => <LogIn {...props} getUser={this.getTheUser}/> }/>
+        <Route exact path='/forgot-password' render={props => <ForgotPassword {...props} getUser={this.getTheUser}/> }/>
+        <Route path='/reset/:token' render={props => <ResetPassword {...props} getUser={this.getTheUser}/> }/>
       </Switch>
       
     );

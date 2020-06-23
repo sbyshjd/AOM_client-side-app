@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import './login.css';
 import GoogleLogin from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from './service/AuthService';
+import { AiFillWechat } from 'react-icons/ai';
 
 class LogIn extends Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class LogIn extends Component {
         this.state={
             username:'',
             password:'',
-            isSubmit:false
+            logInFail: false
         }
         this.service = new AuthService();
     }
@@ -29,12 +30,20 @@ class LogIn extends Component {
         let password = this.state.password;
         this.service.login(username,password)
         .then(response => {
+            if(response.success) {
+                this.props.getUser(response.user)
+                this.props.history.push('/');
+                this.setState({
+                    username:'',
+                    password:'',
+                    logInFail:false
+                })
+            } 
+        })
+        .catch(error => {
             this.setState({
-                username:'',
-                password:'',
-                isSubmit:true
+                logInFail:true
             })
-            this.props.getUser(response)
         })
     }
 
@@ -52,9 +61,6 @@ class LogIn extends Component {
 
 
     render() {
-        if(this.state.isSubmit) {
-            return <Redirect to='/'/>
-        }
         return (
             <div id='log-in' className='pt-5'>
              <div className='container' >
@@ -81,6 +87,9 @@ class LogIn extends Component {
                             
                             <button type='submit' className='btn btn-block btn-primary pt-2 pb-2 rounded-pill'>Log in</button>
                         </form>
+                        <div className='rounded-pill border text-center pt-2 pb-2 mt-3 border-danger text-danger' style={this.state.logInFail ? {display:'block'} : {display:'none'}}>
+                            Invalid username or password, please check again!
+                        </div>
                         <hr/>
                         <GoogleLogin
                             clientId='403475566780-89vdhumrng12v39d51f7mi1rnsr10vo5.apps.googleusercontent.com'
@@ -92,7 +101,7 @@ class LogIn extends Component {
                                 disabled={renderProps.disabled}
                                 >
                                 <FcGoogle />
-                                Sign in with Google
+                                   Sign in with Google
                                 </button>
                             )}
                             buttonText='Login'
@@ -101,9 +110,9 @@ class LogIn extends Component {
                             cookiePolicy={'single_host_origin'}
                         />
                         {/* <Link to='/' type='submit' className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'>Register with Google</Link> */}
-                        <Link to='/' type='submit' className='btn btn-block btn-info pt-2 pb-2 rounded-pill'>Register with Facebook</Link>
+                        <Link to='/' type='submit' className='btn btn-block btn-info pt-2 pb-2 rounded-pill'><AiFillWechat/>Sign in with WeChat</Link>
                         <hr/>
-                        <Link to='/login' className='d-block text-center text-primary mt-3' style={{fontSize:'0.8rem'}}>Forgot your password?</Link>
+                        <Link to='/forgot-password' className='d-block text-center text-primary mt-3' style={{fontSize:'0.8rem'}}>Forgot your password?</Link>
                         <Link to='/signup' className='d-block text-center text-primary mb-3' style={{fontSize:'0.8rem'}}>Create a account</Link>
                     </div>
                 </div>

@@ -14,7 +14,8 @@ class EventCreateModal extends Component {
             owner:this.props.owner._id,
             forwho:[this.props.owner._id],
             participants:[],
-            isallday:false
+            isallday:false,
+            isforall:false
 
         }
         this.service = new EventService();
@@ -46,8 +47,10 @@ class EventCreateModal extends Component {
         const forwho = this.state.forwho;
         const participants = this.state.participants;
         const isallday = this.state.isallday;
+        const isforall=this.state.isforall;
+        const project='non-project';
 
-        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday)
+        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday,isforall,project)
         .then(response => {
             this.props.reload();
             this.props.onHide();
@@ -106,6 +109,10 @@ class EventCreateModal extends Component {
                     <div class="form-check">
                       <input type="checkbox" class="form-check-input" name='isallday' onChange={(e)=>this.checkboxHandler(e)}/>
                       <label class="form-check-label">isAllDay</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" name='isforall' onChange={(e)=>this.checkboxHandler(e)}/>
+                      <label class="form-check-label">isForAll</label>
                     </div>
                     
               </form>
