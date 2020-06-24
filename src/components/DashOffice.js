@@ -17,6 +17,7 @@ class DashOffice extends Component {
             return e.mode==='group'&& (e.forwho.findIndex(user => user._id===this.props.user._id) >=0 || e.owner._id===this.props.user._id || e.isforall===true )
        })
     }
+    
     render() {
         return (
             <div>

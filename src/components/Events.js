@@ -29,6 +29,10 @@ class Events extends Component {
     //     .catch(err => console.log(err))
     // }
 
+    // checkResponse=() => {
+
+    // }
+
     render() {
         return (
             <div className='overflow-auto pl-5 pr-5' style={{maxHeight:'600px'}}>

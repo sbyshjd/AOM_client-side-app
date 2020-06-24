@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import bellIcon from '../images/bell2.svg';
-import message from '../images/message.svg';
+// import message from '../images/message.svg';
 
 class DashTop extends Component {
     constructor(props) {
@@ -29,9 +29,9 @@ class DashTop extends Component {
                 </div>     
                 </form>
                 <ul className='navbar-nav mt-3 mb-3'>
-                    <li className='nav-item pr-3'>
+                    {/* <li className='nav-item pr-3'>
                         <img src={message} alt="message"/>
-                    </li>
+                    </li> */}
                 
                     <li className='nav-item pr-3 border-right'>
                         <img src={bellIcon} alt="bell"/>
