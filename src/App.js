@@ -25,11 +25,13 @@ class App extends Component {
     this.state={
       loggedUser:null,
       events:[],
+      officeEvents:[],
       projects:[],
       calendarEvents:[],
       users:[],
       calendarUserIds:[],
-      tasks:[]
+      tasks:[],
+      responseAll:null
     }
     this.service = new AuthService();
     this.eventService = new EventService();
@@ -38,51 +40,41 @@ class App extends Component {
   }
 
   componentDidMount() {
-    //get all the events from database
-    this.eventService.get()
-    .then(response => {
-      this.setState({
-        events:response,
-        calendarEvents:response
-      })
-    })
-    //get all the users
-    this.service.getAllTheUsers()
-    .then(response => {
-      const userIds = response.map(u => u._id)
-      this.setState({
-        users:response,
-        calendarUserIds:userIds
-      })
-    })
-
-    //get all the projects from database
-    this.projectService.get()
-    .then(response => {
-        this.setState({
-            projects: response
-        })
-    })
-
-    //get all the tasks
-    this.taskService.getAll()
-    .then(response => {
-      this.setState({
-        tasks: response
-      })
-    })
+    this.getAllEvents();
+    this.getAllUsers();
+    this.getAllProjects();
+    this.getAllTasks();
 
   }
 //----------------------------after component did mounted-------------------------------------------
+
+//filter the office Events
+  eventsFilterHandler = (events) => {
+  return  events.filter(e => {
+       return e.mode==='group'&& (e.forwho.findIndex(user => user._id===this.state.loggedUser._id) >=0 || e.owner._id===this.state.loggedUser._id || e.isforall===true )
+    })
+  }
+  //to check is the user is responsed all the events
+  checkResponse=() => {
+    const isResponsed = this.state.officeEvents.every(e=> e.responses.includes(this.state.loggedUser._id));
+    console.log(isResponsed)
+    this.setState({
+      responseAll:isResponsed
+    });
+}
   //get all the events from database
   getAllEvents=() => {
     this.eventService.get()
     .then(response => {
       this.setState({
         events:response,
-        calendarEvents:response
+        calendarEvents:response,
+        officeEvents:this.eventsFilterHandler(response)
+      },()=> {
+        this.checkResponse()
       })
     })
+    .catch(err => console.log(err))
   }
 
 //get all the projects from db
@@ -93,6 +85,7 @@ class App extends Component {
             projects: response
         })
     })
+    .catch(err => console.log(err))
   }
 
 //get all tasks from db
@@ -103,6 +96,7 @@ class App extends Component {
         tasks: response
       })
     })
+    .catch(err => console.log(err))
   }
 
   //get all users from db
@@ -115,6 +109,7 @@ class App extends Component {
         calendarUserIds:userIds
       })
     })
+    .catch(err => console.log(err))
   }
   
 
@@ -144,7 +139,10 @@ class App extends Component {
     .then(response => {
       this.setState({
         events:response,
+        officeEvents:this.eventsFilterHandler(response),
         calendarEvents:response.filter(e => this.qualifyEvent(e,this.state.calendarUserIds))
+      },()=> {
+        this.checkResponse()
       })
     })
   }
@@ -187,9 +185,9 @@ class App extends Component {
          <div id='dashboard' className='d-flex'>
             <Route path='/' render={props => <DashBoard {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
             <div style={{width:'100%'}}>
-            <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} /> }/>
+            <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} responseAll={this.state.responseAll} /> }/>
             <Route exact path='/' render={props => <DashHome {...props} user={this.state.loggedUser} users={this.state.users} projects={this.state.projects} tasks={this.state.tasks} /> }/>
-            <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.events} reload={()=>this.getAllTheEvents()} /> }/>
+            <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.officeEvents} reload={()=>this.getAllTheEvents()} /> }/>
             <Route exact path='/user' render={props => <DashMyPage {...props} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects} /> }/>
             <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} /> }/>
             <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.calendarEvents} renderedEvents={this.calendarEventsByUserId} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects}/>}/>

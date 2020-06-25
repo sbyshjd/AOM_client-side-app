@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import bellIcon from '../images/bell2.svg';
+// import bellIcon from '../images/bell2.svg';
+import { IoIosMailUnread } from "react-icons/io";
+import { IoIosMail } from "react-icons/io";
 // import message from '../images/message.svg';
 
 class DashTop extends Component {
@@ -33,10 +35,12 @@ class DashTop extends Component {
                         <img src={message} alt="message"/>
                     </li> */}
                 
-                    <li className='nav-item pr-3 border-right'>
-                        <img src={bellIcon} alt="bell"/>
+                    <li className='nav-item pr-3 border-right' >
+                        {/* <img src={bellIcon} alt="bell"/> */}
+                        {this.props.responseAll===false && <IoIosMailUnread className='text-danger' style={{fontSize:'1.25rem'}}/> }
+                        {this.props.responseAll===true && <IoIosMail className='text-muted' style={{fontSize:'1.25rem'}}/> }
                     </li>
-                    <li className='nav-item pl-3 pr-3 text-muted'>
+                    <li className='nav-item pl-3 pr-3 text-muted' >
                         {this.state.loggedUser.username}
                     </li>
                     <li className='nav-item'>

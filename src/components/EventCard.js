@@ -88,7 +88,8 @@ class EventCard extends Component {
                 this.setState({
                     isJoined:!this.state.isJoined
                 })
-                this.props.reload()
+                this.props.reload();
+                this.props.checkResponse();
             })
             .catch(err => console.log(err))
         } else {
@@ -141,7 +142,7 @@ class EventCard extends Component {
                     <div>
                         {moment(this.props.starttime).fromNow()}
                     </div>
-                    <div>
+                    {this.props.owner._id===this.props.user._id && (<div>
                         <button className='btn btn-outline-info' onClick={()=>this.setModalShow(true)}>Edit</button>
                         <EventEditModal
                             id={this.props._id}
@@ -170,7 +171,7 @@ class EventCard extends Component {
                                 show={this.state.showEventDeleteModal}
                                 onHide={()=>this.setDeleteModalShow(false)}
                             />
-                    </div>
+                    </div>)}
                 </div>
             </div>
         );

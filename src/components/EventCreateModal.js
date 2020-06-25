@@ -14,6 +14,7 @@ class EventCreateModal extends Component {
             owner:this.props.owner._id,
             forwho:[this.props.owner._id],
             participants:[],
+            responses:[],
             isallday:false,
             isforall:false
 
@@ -46,11 +47,12 @@ class EventCreateModal extends Component {
         const mode = 'group';
         const forwho = this.state.forwho;
         const participants = this.state.participants;
+        const responses = this.state.responses;
         const isallday = this.state.isallday;
         const isforall=this.state.isforall;
         const project='non-project';
 
-        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday,isforall,project)
+        this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,responses,isallday,isforall,project)
         .then(response => {
             this.props.reload();
             this.props.onHide();

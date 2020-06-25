@@ -29,14 +29,20 @@ class Events extends Component {
     //     .catch(err => console.log(err))
     // }
 
-    // checkResponse=() => {
+    checkResponse=() => {
+        const isResponsed = this.props.events.every(e=> e.responses.includes(this.props.user._id));
+        console.log(isResponsed)
+        this.props.checkResponse(isResponsed);
+    }
 
+    // componentDidMount() {
+    //     this.checkResponse();
     // }
 
     render() {
         return (
             <div className='overflow-auto pl-5 pr-5' style={{maxHeight:'600px'}}>
-                {this.props.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.props.reload} {...e}/>)}
+                {this.props.events.map((e,i)=> <EventCard user={this.props.user} key={e._id} reload={this.props.reload} checkResponse={this.checkResponse} {...e}/>)}
                 <div className='d-flex flex-row-reverse'>
                 <button className="btn" onClick={()=>this.setModalShow(true)} style={{backgroundColor:'orange',color:'white'}}>
                 Add a new Event
