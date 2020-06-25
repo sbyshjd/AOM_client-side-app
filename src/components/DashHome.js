@@ -36,12 +36,13 @@ class DashHome extends Component {
 
     render() {
         return (
-            <div className='bg-light' style={{height:'calc(100vh - 70px)'}}>
+            <div className='bg-light pt-4 pl-4' style={{height:'calc(100vh - 70px)'}}>
                 <h3>Welcome to office,{this.props.user.username}</h3>
                 <p>Totally we have {this.props.projects.length} projects. and working on {this.props.projects.filter(p => p.status==='ongoing').length} projects right now </p>
-                <p>You are assigned to projects: <i>{this.props.projects.filter(p=>p.team.map(u=>u._id).includes(this.props.user._id)).map(p => <li key={p._id}>{p.projectname}</li> )}</i></p>
-                <p>You aleady worked in our office for: {this.totalTime()} hours</p>
-                <div>This week, You have workd on {this.weekProjectAndTime()} </div>
+                <div>You are assigned to projects (you could check in project-planing ): <i>{this.props.projects.filter(p=>p.team.map(u=>u._id).includes(this.props.user._id)).map(p => <h5 key={p._id}>{p.projectname}</h5> )}</i></div>
+                
+                <div>This week, You have workd on {this.state.myWorkTime.length>0 ? this.weekProjectAndTime() : (<h5><i>no projects and worktime yet, please sign in Time register</i></h5>)} </div>
+                <p>You aleady worked in our office for: {this.totalTime()} hours totally</p>
                 <h3>Enjoy working and have fun!</h3>
             </div>
         );

@@ -57,6 +57,11 @@ class AuthService {
         .then(response => response.data)
     }
 
+    deleteById = (id) => {
+        return this.service.delete(`/delete/${id}`)
+        .then(response => response.data)
+    }
+
 }
 
 export default AuthService;

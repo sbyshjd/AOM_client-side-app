@@ -18,6 +18,7 @@ import ProjectService from './components/service/ProjectService';
 import TaskService from './components/service/TaskService';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import NotFoundPage from './components/NotFoundPage';
 
 class App extends Component {
   constructor(props) {
@@ -57,7 +58,6 @@ class App extends Component {
   //to check is the user is responsed all the events
   checkResponse=() => {
     const isResponsed = this.state.officeEvents.every(e=> e.responses.includes(this.state.loggedUser._id));
-    console.log(isResponsed)
     this.setState({
       responseAll:isResponsed
     });
@@ -187,10 +187,11 @@ class App extends Component {
             <div style={{width:'100%'}}>
             <Route path='/' render={props => <DashTop {...props} getUser={this.getTheUser} user={this.state.loggedUser} responseAll={this.state.responseAll} /> }/>
             <Route exact path='/' render={props => <DashHome {...props} user={this.state.loggedUser} users={this.state.users} projects={this.state.projects} tasks={this.state.tasks} /> }/>
-            <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.officeEvents} reload={()=>this.getAllTheEvents()} /> }/>
+            <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.officeEvents} reload={()=>this.getAllTheEvents()} getAllUsers={()=>this.getAllUsers()} users={this.state.users} /> }/>
             <Route exact path='/user' render={props => <DashMyPage {...props} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects} /> }/>
             <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} /> }/>
             <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.calendarEvents} renderedEvents={this.calendarEventsByUserId} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects}/>}/>
+            <Route exact path='/notfound' render={props => <NotFoundPage {...props} /> } />
             </div>
             
         </div>

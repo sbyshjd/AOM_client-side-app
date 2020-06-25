@@ -26,7 +26,7 @@ class DashOffice extends Component {
                     <Events user={this.state.loggedUser} events={this.props.events} reload={()=>this.props.reload()} checkResponse={(boolean)=>this.props.checkResponse(boolean)}/>
                     </Tab>
                     <Tab eventKey="colleagues" title="Colleagues">
-                    <Colleagues />
+                    <Colleagues user={this.props.user} getAllUsers={()=>this.props.getAllUsers()} users={this.props.users}/>
                     </Tab>
                 </Tabs>
             </div>
