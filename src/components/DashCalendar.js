@@ -220,6 +220,7 @@ class DashCalendar extends Component {
     console.log(endtime);
     const owner = this.props.user._id;
     const mode = e.state;
+    
     //assign the forwho
     let forwho = [this.props.user._id];
     if(mode==='group') {
@@ -229,8 +230,10 @@ class DashCalendar extends Component {
       forwho = colleaguesArr
     }
     const participants = [];
+    const responses=[];
+    const isforall = false;
     //save the event into the backend database;
-    this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,isallday,project)
+    this.service.create(type,eventname,description,starttime,endtime,owner,mode,forwho,participants,responses,isallday,isforall,project)
     .then(response => {
       this.props.reload();
     })
