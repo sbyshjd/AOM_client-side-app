@@ -66,7 +66,7 @@ class DashTop extends Component {
                         {this.state.loggedUser.username}
                     </li>
                     <li className='nav-item'>
-                        <img style={{height:'30px',borderRadius:'50px'}} src={this.state.loggedUser.photo} alt="profile"/>
+                        <img style={{height:'30px',width:'30px', borderRadius:'50px'}} src={this.state.loggedUser.photo} alt="profile"/>
                     </li>
                 </ul>
                 

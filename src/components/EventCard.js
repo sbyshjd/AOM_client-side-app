@@ -89,7 +89,6 @@ class EventCard extends Component {
                     isJoined:!this.state.isJoined
                 })
                 this.props.reload();
-                this.props.checkResponse();
             })
             .catch(err => console.log(err))
         } else {

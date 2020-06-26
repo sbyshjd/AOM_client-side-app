@@ -130,7 +130,6 @@ class SignUp extends Component {
                         </div>
                         <hr/>
                         <Link to='/login' type='submit' className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'>Register with Google</Link>
-                        <Link to='/login' type='submit' className='btn btn-block btn-info pt-2 pb-2 rounded-pill'>Register with WeChat</Link>
                         <hr/>
                         <Link to='/login' className='d-block text-center text-primary mb-3' style={{fontSize:'0.8rem'}}>Arleady have an account? Log in!</Link>
                     </div>

@@ -8,8 +8,8 @@ class Home extends Component {
             <div className='container-fluid'>
             <div id='homepage'className='row d-flex flex-row-reverse'>
                 <div className='col-4'>
-                <h1 style={{color:'white',fontSize:'3rem'}}>Mana-Arch</h1>
-                <h5>to be the best Architecture Office Management system, for all the architecture office from small atelier to giant company</h5>
+                <h1 className='mt-5' style={{color:'white',fontSize:'3rem'}}>Mana-Arch</h1>
+                <h5 className='mt-3 mb-5 text-muted'>professional Architecture Office Management system, for all the architecture office from small atelier to giant company</h5>
                 <Link to='/signup' style={{fontSize:'1rem',borderRadius:'10rem'}} className='btn btn-light btn-block btn-user' >Sign Up</Link>
                 <Link to='/login' style={{fontSize:'1rem',borderRadius:'10rem'}} className='btn btn-light btn-block btn-user'>Log in</Link> 
                 </div>

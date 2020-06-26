@@ -62,6 +62,16 @@ class AuthService {
         .then(response => response.data)
     }
 
+    changeRoleById = (role,id) => {
+        return this.service.put(`/changerole/${id}`,{role})
+        .then(response => response.data)
+    }
+
+    changeStatusById = (status,id) => {
+        return this.service.put(`/changestatus/${id}`,{status})
+        .then(response => response.data)
+    }
+
 }
 
 export default AuthService;

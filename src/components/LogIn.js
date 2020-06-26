@@ -4,7 +4,7 @@ import GoogleLogin from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import AuthService from './service/AuthService';
-import { AiFillWechat } from 'react-icons/ai';
+
 
 class LogIn extends Component {
     constructor(props) {
@@ -109,8 +109,6 @@ class LogIn extends Component {
                             onFailure={this.handleGoogleLogin}
                             cookiePolicy={'single_host_origin'}
                         />
-                        {/* <Link to='/' type='submit' className='btn btn-block btn-danger pt-2 pb-2 rounded-pill'>Register with Google</Link> */}
-                        <Link to='/' type='submit' className='btn btn-block btn-info pt-2 pb-2 rounded-pill'><AiFillWechat/>Sign in with WeChat</Link>
                         <hr/>
                         <Link to='/forgot-password' className='d-block text-center text-primary mt-3' style={{fontSize:'0.8rem'}}>Forgot your password?</Link>
                         <Link to='/signup' className='d-block text-center text-primary mb-3' style={{fontSize:'0.8rem'}}>Create a account</Link>

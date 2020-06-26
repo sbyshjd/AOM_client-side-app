@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import Timeline, {
     TimelineHeaders,
     SidebarHeader,
-    DateHeader
+    DateHeader,
+    TimelineMarkers,
+    TodayMarker
   } from "react-calendar-timeline/lib";
 import 'react-calendar-timeline/lib/Timeline.css';
 import moment from 'moment';
@@ -42,7 +44,6 @@ class Planing extends Component {
                 return {id:u._id+cP._id,title:u.username}
             }))
         },[0])
-        console.log(groups)
         return groups
     }
 
@@ -60,7 +61,6 @@ class Planing extends Component {
                 })
                 )
         },[0])
-        console.log(items)
         return items
     }
 
@@ -77,14 +77,27 @@ class Planing extends Component {
                     defaultTimeEnd={moment().add(12, 'hour')}
                 >
                 <TimelineHeaders className="sticky">
-                <SidebarHeader>
+                    <SidebarHeader>
                     {({ getRootProps }) => {
                         return <div {...getRootProps()}>Projects</div>;
                         }}
-                </SidebarHeader>
-                <DateHeader unit="primaryHeader" />
-                <DateHeader />
+                    </SidebarHeader>
+                    <DateHeader unit="primaryHeader" />
+                    <DateHeader />
                 </TimelineHeaders>
+                <TimelineMarkers>
+                <TodayMarker>
+                    {({ styles, date }) => {
+                    const customStyles = {
+                        ...styles,
+                        backgroundColor: 'red',
+                        width: '4px'
+                        }
+                        return <div style={customStyles} />
+                    }}
+                </TodayMarker> 
+                </TimelineMarkers>
+
             </Timeline>
         );
     }
