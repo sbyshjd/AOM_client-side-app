@@ -55,6 +55,7 @@ class LogIn extends Component {
                 password:'',
                 isSubmit:true
             })
+            this.props.history.push('/');
             this.props.getUser(response)
         })
     }
