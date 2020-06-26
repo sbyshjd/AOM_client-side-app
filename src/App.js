@@ -189,7 +189,7 @@ class App extends Component {
             <Route exact path='/' render={props => <DashHome {...props} user={this.state.loggedUser} users={this.state.users} projects={this.state.projects} tasks={this.state.tasks} /> }/>
             <Route exact path='/office' render={props => <DashOffice {...props} getUser={this.getTheUser} user={this.state.loggedUser} events={this.state.officeEvents} reload={()=>this.getAllTheEvents()} getAllUsers={()=>this.getAllUsers()} users={this.state.users} /> }/>
             <Route exact path='/user' render={props => <DashMyPage {...props} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects} /> }/>
-            <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} /> }/>
+            <Route exact path='/projects' render={props => <DashProjects {...props} getUser={this.getTheUser} user={this.state.loggedUser} users={this.state.users} projects={this.state.projects} getAllProjects={()=>this.getAllProjects()}/> }/>
             <Route exact path='/calendar' render={props => <DashCalendar {...props} reload={()=>this.getAllTheEvents()} users={this.state.users} events={this.state.calendarEvents} renderedEvents={this.calendarEventsByUserId} getUser={this.getTheUser} user={this.state.loggedUser} projects={this.state.projects}/>}/>
             <Route exact path='/notfound' render={props => <NotFoundPage {...props} /> } />
             </div>

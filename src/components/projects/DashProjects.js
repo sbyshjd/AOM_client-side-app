@@ -11,7 +11,6 @@ class DashProjects extends Component {
     constructor(props) {
         super(props);
         this.state={
-            projects:[],
             tasks:[],
             isAdmin:null
         }
@@ -19,14 +18,14 @@ class DashProjects extends Component {
         this.taskService = new TaskService();
     }
 
-    getAllProjects= () => {
-        this.projectService.get()
-        .then(response => {
-            this.setState({
-                projects: response
-            })
-        })
-    }
+    // getAllProjects= () => {
+    //     this.projectService.get()
+    //     .then(response => {
+    //         this.setState({
+    //             projects: response
+    //         })
+    //     })
+    // }
 
     getAllTasks=() => {
         this.taskService.getAll()
@@ -47,7 +46,6 @@ class DashProjects extends Component {
                 isAdmin:true
             })
         }
-        this.getAllProjects();
         this.getAllTasks();
     }
 
@@ -57,11 +55,11 @@ class DashProjects extends Component {
             <div style={{width:'100%'}}>
                 <Tabs defaultActiveKey="planing">
                     <Tab eventKey="projects" title="Projects">
-                        {this.state.isAdmin && <Projects users={this.props.users} user={this.props.user} getAllProjects={this.getAllProjects} projects={this.state.projects} getAllTasks={this.getAllTasks}/> }
-                        {!this.state.isAdmin && <ProjectsEmployee users={this.props.users} user={this.props.user} getAllProjects={this.getAllProjects} projects={this.state.projects} getAllTasks={this.getAllTasks}/> }
+                        {this.state.isAdmin && <Projects users={this.props.users} user={this.props.user} getAllProjects={this.props.getAllProjects} projects={this.props.projects} getAllTasks={this.getAllTasks}/> }
+                        {!this.state.isAdmin && <ProjectsEmployee users={this.props.users} user={this.props.user} getAllProjects={this.props.getAllProjects} projects={this.props.projects} getAllTasks={this.getAllTasks}/> }
                     </Tab>
                     <Tab eventKey="planing" title="Planing">
-                        <Planing user={this.props.user} projects={this.state.projects} tasks={this.state.tasks}/>
+                        <Planing user={this.props.user} projects={this.props.projects} tasks={this.state.tasks}/>
                     </Tab>
                 </Tabs>
             </div>
