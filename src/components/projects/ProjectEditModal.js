@@ -34,7 +34,6 @@ class ProjectEditModal extends Component {
                 startdate: moment(startdate).format('YYYY-MM-DD'),
                 enddate: moment(enddate).format('YYYY-MM-DD'),
                 status: status,
-                owner:partner._id,
                 leader:leader._id,
                 team: team.map(p => p._id),
                 phase: phase

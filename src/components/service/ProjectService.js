@@ -9,8 +9,8 @@ class ProjectService {
         this.service = service;
     }
 
-    create=(projectname,projectcode,startdate,enddate,status,partner,leader,team,phase) => {
-        return this.service.post('/',{projectname,projectcode,startdate,enddate,status,partner,leader,team,phase})
+    create=(projectname,projectcode,startdate,enddate,status,leader,team,phase) => {
+        return this.service.post('/',{projectname,projectcode,startdate,enddate,status,leader,team,phase})
         .then(response => response.data)
     }
 

@@ -55,12 +55,11 @@ class ProjectCreateModal extends Component {
         const startdate = this.state.startdate;
         const enddate = this.state.enddate;
         const status = this.state.status;
-        const partner = this.props.partner._id;
         const leader = this.state.leader;
         const team = this.state.team;
         const phase = this.state.phase;
 
-        this.service.create(projectname,projectcode,startdate,enddate,status,partner,leader,team,phase)
+        this.service.create(projectname,projectcode,startdate,enddate,status,leader,team,phase)
         .then(response => {
             this.props.reload();
             this.props.onHide();
