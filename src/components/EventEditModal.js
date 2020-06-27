@@ -32,8 +32,8 @@ class EventEditModal extends Component {
         const type = this.state.type;
         const eventname = this.state.eventname;
         const description = this.state.description;
-        const starttime = this.state.starttime;
-        const endtime = this.state.endtime;
+        const starttime = moment(this.state.starttime);
+        const endtime = moment(this.state.endtime);
         const mode = 'group';
         this.service.edit(type,eventname,description,starttime,endtime,mode,this.props.id)
         .then(response => {

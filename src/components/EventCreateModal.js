@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Modal} from 'react-bootstrap';
 import EventService from './service/EventService';
+import moment from 'moment';
 
 class EventCreateModal extends Component {
     constructor(props) {
@@ -41,8 +42,8 @@ class EventCreateModal extends Component {
         const type = this.state.type;
         const eventname = this.state.eventname;
         const description = this.state.description;
-        const starttime = this.state.starttime;
-        const endtime = this.state.endtime;
+        const starttime = moment(this.state.starttime);
+        const endtime = moment(this.state.endtime);
         const owner = this.state.owner;
         const mode = 'group';
         const forwho = this.state.forwho;
