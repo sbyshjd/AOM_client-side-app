@@ -34,7 +34,8 @@ class EventEditModal extends Component {
         const description = this.state.description;
         const starttime = this.state.starttime;
         const endtime = this.state.endtime;
-        this.service.edit(type,eventname,description,starttime,endtime,this.props.id)
+        const mode = 'group';
+        this.service.edit(type,eventname,description,starttime,endtime,mode,this.props.id)
         .then(response => {
             this.props.reload();
             this.props.onHide();
